@@ -1,0 +1,1 @@
+C:\Users\user\esg-navigator\apps\web\next.config.mjs

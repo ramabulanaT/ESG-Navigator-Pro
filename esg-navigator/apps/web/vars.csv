@@ -1,0 +1,7 @@
+﻿# =========================
+# file: vars.csv
+# (Optional merge fields keyed by email)
+# =========================
+email,company,role
+ann@example.com,Acme Inc,CTO
+bob@example.com,Wayne Enterprises,Ops
