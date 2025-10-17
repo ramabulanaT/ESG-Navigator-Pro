@@ -1,0 +1,17 @@
+{
+  "name": "esg-navigator",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "dev": "concurrently \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:web": "npm run dev -w @esgnavigator/web",
+    "dev:api": "npm run dev -w @esgnavigator/api",
+    "build": "npm run build -w @esgnavigator/api && npm run build -w @esgnavigator/web",
+    "start:web": "npm start -w @esgnavigator/web",
+    "start:api": "npm start -w @esgnavigator/api"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
