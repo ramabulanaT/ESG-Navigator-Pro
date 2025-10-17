@@ -1,0 +1,28 @@
+﻿# Node/monorepo
+node_modules/
+apps/*/node_modules/
+apps/*/.next/
+apps/*/dist/
+dist/
+coverage/
+logs/
+*.log
+# Env files (keep only example templates)
+.env
+.env.*
+*.env
+!.env.example
+**/.env
+**/.env.*
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+# Build outputs and caches
+.next/
+out/
+.cache/
+# Misc
+*.pid
+*.seed

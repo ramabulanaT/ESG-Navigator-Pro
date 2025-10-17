@@ -1,0 +1,22 @@
+﻿* text=auto
+# Enforce LF where tools expect it
+*.sh      text eol=lf
+*.bash    text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.json    text eol=lf
+*.js      text eol=lf
+*.ts      text eol=lf
+*.tsx     text eol=lf
+*.jsx     text eol=lf
+*.md      text eol=lf
+Dockerfile text eol=lf
+# Optional: keep PS1 CRLF on Windows (safe either way)
+*.ps1     text eol=crlf
+# Binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
