@@ -1,0 +1,81 @@
+﻿version: "3.8"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: tis_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - tis_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: tis_redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - tis_network
+    restart: unless-stopped
+
+  # Web / Next.js App
+  web:
+    image: node:18-alpine
+    container_name: tis_web
+    working_dir: /app
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - UNIVEN_PARTNERSHIP_ACTIVE=${UNIVEN_PARTNERSHIP_ACTIVE}
+      - SIBANYE_INTEGRATION_READY=${SIBANYE_INTEGRATION_READY}
+      - JSE_SME_PROGRAM_ENABLED=${JSE_SME_PROGRAM_ENABLED}
+      - SALT_INTEGRATION_ENABLED=${SALT_INTEGRATION_ENABLED}
+    volumes:
+      - ./apps/web:/app
+      - web_node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    command: >
+      sh -c "
+        echo 'Installing dependencies...' &&
+        npm install &&
+        echo 'Building Next.js app...' &&
+        npm run build &&
+        echo 'Starting production server...' &&
+        npm run start
+      "
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - tis_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  web_node_modules:
+
+networks:
+  tis_network:
+    driver: bridge

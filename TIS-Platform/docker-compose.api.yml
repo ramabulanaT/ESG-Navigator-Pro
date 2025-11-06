@@ -1,0 +1,35 @@
+﻿services:
+  api:
+    image: node:18-alpine
+    container_name: tis_api
+    working_dir: /app
+    command: ["sh","-lc","npm i && npm run start"]
+    ports:
+      - "5050:5050"
+    environment:
+      PORT: "5050"
+      CORS_ORIGINS: "http://127.0.0.1:5500,http://localhost:5500,http://localhost:3000,http://localhost:5173,https://*.vercel.app,https://www.esgnavigator.ai"
+      PUBLIC_API_KEY: ""
+      RATE_LIMIT_WINDOW_MS: "60000"
+      RATE_LIMIT_MAX: "30"
+      # HubSpot
+      HUBSPOT_API_KEY: ""
+      HUBSPOT_PIPELINE_ID: ""
+      HUBSPOT_DEALSTAGE_NEW: ""
+      HUBSPOT_DEALSTAGE_WON: ""
+      # Anthropic
+      ANTHROPIC_API_KEY: ""
+      ANTHROPIC_MODEL: "claude-3-5-sonnet-20241022"
+      # GCP
+      GOOGLE_PROJECT_ID: ""
+      GOOGLE_APPLICATION_CREDENTIALS: "/secrets/gcp-sa.json"
+      GCS_BUCKET: ""
+      # Optional DB & Bloomberg
+      DATABASE_URL: ""
+      BLOOMBERG_ENABLE: ""
+      BLOOMBERG_HOST: ""
+      BLOOMBERG_PORT: ""
+    volumes:
+      - ./apps/api:/app
+      - ./data:/data
+      - ./secrets:/secrets:ro

@@ -1,0 +1,12 @@
+﻿{
+  "name": "tis-esg-api-lite",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
