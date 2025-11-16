@@ -22,18 +22,24 @@ export default function Home() {
             Real-time compliance, energy intelligence, and sustainability monitoring unified.
           </p>
           
-          <div className="flex gap-4 justify-center">
+          <div className="flex gap-4 justify-center flex-wrap">
             <Link 
               href="/dashboard"
-              className="px-8 py-4 bg-green-600 text-white text-lg font-bold rounded-lg hover:bg-green-700 transition shadow-lg"
+              className="px-8 py-4 bg-indigo-600 text-white text-lg font-bold rounded-lg hover:bg-indigo-700 transition shadow-lg"
             >
-              View Dashboard
+              Enter Dashboard
             </Link>
             <Link 
-              href="/dashboard"
+              href="/training"
+              className="px-8 py-4 bg-green-600 text-white text-lg font-bold rounded-lg hover:bg-green-700 transition shadow-lg"
+            >
+              Training Portal
+            </Link>
+            <Link 
+              href="/assessments"
               className="px-8 py-4 bg-blue-600 text-white text-lg font-bold rounded-lg hover:bg-blue-700 transition shadow-lg"
             >
-              API Metrics
+              Assessments
             </Link>
           </div>
         </div>
