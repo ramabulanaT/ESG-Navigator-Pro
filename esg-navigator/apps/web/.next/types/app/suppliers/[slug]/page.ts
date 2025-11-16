@@ -1,4 +1,4 @@
-// File: C:\Users\user\esg-navigator\apps\web\app\suppliers\[slug]\page.tsx
+// File: C:\Users\user\Documents\GitHub\ESG-Navigator-Pro\esg-navigator\apps\web\app\suppliers\[slug]\page.tsx
 import * as entry from '../../../../../app/suppliers/[slug]/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

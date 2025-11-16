@@ -1,4 +1,4 @@
-// File: C:\Users\user\esg-navigator\apps\web\app\layout.tsx
+// File: C:\Users\user\Documents\GitHub\ESG-Navigator-Pro\esg-navigator\apps\web\app\layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

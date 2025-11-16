@@ -1,5 +1,11 @@
 // src/app/assessments/page.tsx
 // Assessments Hub - ISO Framework Assessment Center
+// src/app/page.tsx
+import AssessmentsPage from './assessments/page'
+
+export default function Home() {
+  return <AssessmentsPage />
+}
 
 'use client'
 import Link from 'next/link'

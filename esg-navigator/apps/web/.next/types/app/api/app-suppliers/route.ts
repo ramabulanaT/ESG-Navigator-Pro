@@ -1,4 +1,4 @@
-// File: C:\Users\user\esg-navigator\apps\web\app\api\app-suppliers\route.ts
+// File: C:\Users\user\Documents\GitHub\ESG-Navigator-Pro\esg-navigator\apps\web\app\api\app-suppliers\route.ts
 import * as entry from '../../../../../app/api/app-suppliers/route.js'
 import type { NextRequest } from 'next/server.js'
 

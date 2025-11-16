@@ -1,4 +1,4 @@
-// apps/web/app/demo/components/DemoFilters.tsx
+﻿// apps/web/app/demo/components/DemoFilters.tsx
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -16,10 +16,10 @@ function parseValue(input: string): number {
 }
 
 const SORTS = [
-  { key: "score-desc", label: "Score (High → Low)" },
-  { key: "score-asc",  label: "Score (Low → High)" },
-  { key: "value-desc", label: "Value (High → Low)" },
-  { key: "value-asc",  label: "Value (Low → High)" }
+  { key: "score-desc", label: "Score (High â†’ Low)" },
+  { key: "score-asc",  label: "Score (Low â†’ High)" },
+  { key: "value-desc", label: "Value (High â†’ Low)" },
+  { key: "value-asc",  label: "Value (Low â†’ High)" }
 ] as const;
 type SortKey = typeof SORTS[number]["key"];
 
@@ -36,9 +36,9 @@ export default function DemoFilters() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = params.get("q") || "";
-    const r = (params.get("risk") || "").split(",").map(x => x.trim().toUpperCase()).filter(x => x==="LOW"||x==="MEDIUM"||x==="HIGH") as Risk[];
-    const s = (params.get("sort") as SortKey) || "score-desc";
+    const q = params?.get("q") || "";
+    const r = (params?.get("risk") || "").split(",").map(x => x.trim().toUpperCase()).filter(x => x==="LOW"||x==="MEDIUM"||x==="HIGH") as Risk[];
+    const s = (params?.get("sort") as SortKey) || "score-desc";
     setQuery(q);
     setRisks(r);
     setSort(SORTS.some(x=>x.key===s) ? s : "score-desc");
