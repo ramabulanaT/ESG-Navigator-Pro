@@ -1,354 +1,117 @@
-'use client'
-import { useState } from 'react'
-import Link from 'next/link'
-import { CheckCircle, Clock, PlayCircle, FileCheck, Shield, Zap, Mountain, ArrowRight } from 'lucide-react'
+import { NextRequest, NextResponse } from 'next/server'
 
-interface Assessment {
-  id: string
-  title: string
-  subtitle: string
-  description: string
-  icon: string
-  color: string
-  status: 'completed' | 'in-progress' | 'not-started'
-  score?: number
-  progress?: number
-  lastUpdated: string
-  IconComponent: React.ComponentType<{ className: string }>
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY
+
+interface AssessmentRequest {
+  framework: string
+  assessmentType: 'gap-analysis' | 'compliance-check' | 'recommendations'
+  organizationContext?: string
 }
 
-const initialAssessments: Assessment[] = [
-  {
-    id: 'iso-14001',
-    title: 'ISO 14001',
-    subtitle: 'Environmental Management',
-    description: 'Comprehensive environmental management system assessment aligned with international standards',
-    icon: '🌍',
-    color: 'green',
-    status: 'completed',
-    score: 95,
-    lastUpdated: '2 days ago',
-    IconComponent: FileCheck,
-  },
-  {
-    id: 'iso-45001',
-    title: 'ISO 45001',
-    subtitle: 'Health & Safety',
-    description: 'Occupational health and safety management system evaluation and compliance tracking',
-    icon: '🏥',
-    color: 'blue',
-    status: 'in-progress',
-    progress: 65,
-    lastUpdated: '1 day ago',
-    IconComponent: Shield,
-  },
-  {
-    id: 'iso-50001',
-    title: 'ISO 50001',
-    subtitle: 'Energy Management',
-    description: 'Energy performance optimization and efficiency management framework assessment',
-    icon: '⚡',
-    color: 'yellow',
-    status: 'not-started',
-    lastUpdated: 'Never',
-    IconComponent: Zap,
-  },
-  {
-    id: 'gistm',
-    title: 'GISTM',
-    subtitle: 'Tailings Storage',
-    description: 'Global Industry Standard for Tailings Management - Mining sector compliance',
-    icon: '⛏️',
-    color: 'purple',
-    status: 'not-started',
-    lastUpdated: 'Never',
-    IconComponent: Mountain,
-  },
-]
+const frameworkPrompts: Record<string, string> = {
+  'iso-14001': `You are an ISO 14001 Environmental Management System expert. Provide a comprehensive assessment covering:
+1. Current environmental management maturity level (1-5 scale)
+2. Key compliance gaps identified
+3. Specific ISO 14001 requirements not being met
+4. Recommended actions (prioritized by impact and effort)
+5. Timeline for implementation (in months)
+Format as structured JSON with categories.`,
+  
+  'iso-45001': `You are an ISO 45001 Health & Safety Management System expert. Provide assessment covering:
+1. Occupational health and safety maturity (1-5 scale)
+2. Hazard identification gaps
+3. Worker participation effectiveness
+4. Incident prevention capabilities
+5. Specific compliance recommendations
+Format as structured JSON.`,
+  
+  'iso-50001': `You are an ISO 50001 Energy Management expert. Assess:
+1. Energy management system maturity (1-5 scale)
+2. Energy performance improvement opportunities
+3. Current energy efficiency gaps
+4. Cost savings potential (estimated %)
+5. Implementation roadmap
+Format as structured JSON with quantified metrics.`,
+  
+  'gistm': `You are a Global Industry Standard for Tailings Management (GISTM) expert. Provide:
+1. Tailings management maturity assessment
+2. Critical safety and environmental risks
+3. Closure and decommissioning readiness
+4. Stakeholder engagement effectiveness
+5. Compliance with GISTM pillars (governance, design, construction, operation, closure)
+Format as structured JSON.`
+}
 
-export default function AssessmentsPage() {
-  const [assessments, setAssessments] = useState<Assessment[]>(initialAssessments)
-  const [selectedAssessment, setSelectedAssessment] = useState<string | null>(null)
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json() as AssessmentRequest
+    const { framework, assessmentType, organizationContext } = body
 
-  const handleStartAssessment = async (id: string) => {
-    setAssessments(prev =>
-      prev.map(a =>
-        a.id === id
-          ? { ...a, status: 'in-progress' as const, progress: 25, lastUpdated: 'Generating assessment...' }
-          : a
-      )
-    )
-    setSelectedAssessment(id)
-
-    try {
-      // Call Claude AI assessment API
-      const response = await fetch('/api/assessments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          framework: id,
-          assessmentType: 'gap-analysis',
-          organizationContext: 'Mining company evaluating ESG compliance'
-        })
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setAssessments(prev =>
-          prev.map(a =>
-            a.id === id
-              ? { ...a, progress: 100, lastUpdated: 'Just now' }
-              : a
-          )
-        )
-      }
-    } catch (error) {
-      console.error('Assessment error:', error)
-      setAssessments(prev =>
-        prev.map(a =>
-          a.id === id
-            ? { ...a, progress: 50, lastUpdated: 'Error generating assessment' }
-            : a
-        )
+    if (!ANTHROPIC_API_KEY) {
+      return NextResponse.json(
+        { error: 'API key not configured' },
+        { status: 500 }
       )
     }
-  }
 
-  const handleCompleteAssessment = (id: string) => {
-    setAssessments(prev =>
-      prev.map(a =>
-        a.id === id
-          ? { ...a, status: 'completed' as const, score: 92, progress: undefined, lastUpdated: 'Just now' }
-          : a
+    const prompt = frameworkPrompts[framework]
+    if (!prompt) {
+      return NextResponse.json(
+        { error: `Unknown framework: ${framework}` },
+        { status: 400 }
       )
+    }
+
+    const userPrompt = organizationContext 
+      ? `Assess this organization for ${framework} compliance:\n\n${organizationContext}`
+      : `Provide a general ${framework} assessment framework and key areas to evaluate.`
+
+    // Call Anthropic API
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-1-20250805',
+        max_tokens: 2000,
+        system: prompt,
+        messages: [
+          {
+            role: 'user',
+            content: userPrompt
+          }
+        ]
+      })
+    })
+
+    if (!response.ok) {
+      const error = await response.text()
+      console.error('Anthropic API error:', error)
+      return NextResponse.json(
+        { error: 'Assessment generation failed' },
+        { status: response.status }
+      )
+    }
+
+    const data = await response.json()
+    const assessment = data.content?.[0]?.text || ''
+
+    return NextResponse.json({
+      success: true,
+      framework,
+      assessmentType,
+      assessment,
+      timestamp: new Date().toISOString()
+    })
+
+  } catch (error) {
+    console.error('Assessment API error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
     )
   }
-
-  const handleProgressAssessment = (id: string) => {
-    setAssessments(prev =>
-      prev.map(a =>
-        a.id === id && a.progress !== undefined
-          ? { ...a, progress: Math.min(a.progress + 15, 100) }
-          : a
-      )
-    )
-  }
-
-  // Calculate stats
-  const totalAssessments = assessments.length
-  const completedCount = assessments.filter(a => a.status === 'completed').length
-  const inProgressCount = assessments.filter(a => a.status === 'in-progress').length
-  const avgScore =
-    assessments.length > 0
-      ? Math.round(
-          assessments.reduce((sum, a) => sum + (a.score || 0), 0) / assessments.length
-        )
-      : 0
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900">ESG Assessments</h1>
-              <p className="text-gray-600 mt-2 text-lg">
-                Evaluate your compliance across multiple frameworks and standards
-              </p>
-            </div>
-            <Link 
-              href="/dashboard"
-              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
-            >
-              ← Back to Dashboard
-            </Link>
-          </div>
-        </div>
-      </div>
-  
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 font-medium">Total Assessments</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{totalAssessments}</p>
-              </div>
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <FileCheck className="w-6 h-6 text-indigo-600" />
-              </div>
-            </div>
-          </div>
-  
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 font-medium">Completed</p>
-                <p className="text-3xl font-bold text-green-600 mt-1">{completedCount}</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-          </div>
-  
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 font-medium">In Progress</p>
-                <p className="text-3xl font-bold text-blue-600 mt-1">{inProgressCount}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Clock className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-          </div>
-  
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 font-medium">Avg. Score</p>
-                <p className="text-3xl font-bold text-indigo-600 mt-1">{avgScore}%</p>
-              </div>
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">📊</span>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        {/* Assessment Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {assessments.map((assessment) => {
-            const Icon = assessment.IconComponent
-            const isSelected = selectedAssessment === assessment.id
-            return (
-              <div 
-                key={assessment.id} 
-                className={`bg-white rounded-xl shadow-sm border border-gray-200 p-8 hover:shadow-lg transition-all duration-300 cursor-pointer ${
-                  isSelected ? 'ring-2 ring-indigo-500' : ''
-                }`}
-                onClick={() => setSelectedAssessment(assessment.id)}
-              >
-                {/* Header */}
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-3xl shadow-lg">
-                      {assessment.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900">{assessment.title}</h3>
-                      <p className="text-gray-600 font-medium">{assessment.subtitle}</p>
-                    </div>
-                  </div>
-        
-                  {/* Status Badge */}
-                  {assessment.status === 'completed' && (
-                    <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full font-semibold">
-                      <CheckCircle className="w-5 h-5" />
-                      <span>{assessment.score}%</span>
-                    </div>
-                  )}
-                  {assessment.status === 'in-progress' && (
-                    <div className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full font-semibold">
-                      <Clock className="w-5 h-5" />
-                      <span>{assessment.progress}%</span>
-                    </div>
-                  )}
-                  {assessment.status === 'not-started' && (
-                    <div className="px-4 py-2 bg-gray-100 text-gray-600 rounded-full font-semibold">
-                      Not Started
-                    </div>
-                  )}
-                </div>
-        
-                {/* Description */}
-                <p className="text-gray-700 text-lg mb-6 leading-relaxed">
-                  {assessment.description}
-                </p>
-        
-                {/* Progress Bar (for in-progress assessments) */}
-                {assessment.status === 'in-progress' && (
-                  <div className="mb-6">
-                    <div className="flex justify-between text-sm text-gray-600 mb-2">
-                      <span>Progress</span>
-                      <span className="font-semibold">{assessment.progress}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div 
-                        className="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-500"
-                        style={{ width: `${assessment.progress}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
-        
-                {/* Footer */}
-                <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                  <div className="text-sm text-gray-600">
-                    <span className="font-medium">Last updated:</span> {assessment.lastUpdated}
-                  </div>
-                  
-                  <div className="flex gap-3">
-                    {assessment.status === 'in-progress' && (
-                      <button
-                        onClick={() => handleProgressAssessment(assessment.id)}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg font-semibold hover:bg-blue-100 transition-all"
-                      >
-                        <ArrowRight className="w-4 h-4" />
-                        Continue
-                      </button>
-                    )}
-                    <button
-                      onClick={() => {
-                        if (assessment.status === 'not-started') {
-                          handleStartAssessment(assessment.id)
-                        } else if (assessment.status === 'in-progress') {
-                          handleCompleteAssessment(assessment.id)
-                        }
-                      }}
-                      className={`
-                        inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all
-                        ${assessment.status === 'completed' 
-                          ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' 
-                          : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg transform hover:-translate-y-0.5'
-                        }
-                      `}
-                    >
-                      <Icon className="w-5 h-5" />
-                      <span>
-                        {assessment.status === 'completed' ? 'View Results' : 
-                         assessment.status === 'in-progress' ? 'Complete' : 'Start Assessment'}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-  
-        {/* Call to Action */}
-        <div className="mt-12 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg p-10 text-white">
-          <div className="max-w-3xl">
-            <h3 className="text-3xl font-bold mb-4">Need Help With Assessments?</h3>
-            <p className="text-indigo-100 text-lg mb-6 leading-relaxed">
-              Our AI-powered insights can help you identify compliance gaps, prioritize improvements, 
-              and generate actionable recommendations based on industry best practices.
-            </p>
-            <Link
-              href="/ai-insights"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-indigo-600 rounded-lg font-bold hover:bg-indigo-50 transition-colors"
-            >
-              <span>✨</span>
-              Get AI Insights
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
 }
