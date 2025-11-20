@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-black text-white antialiased;
+}
+
+/* Generic link styling */
+a {
+  @apply text-indigo-300 hover:text-indigo-100 underline-offset-4;
+}
+
+/* Simple container helper */
+.page-shell {
+  @apply min-h-screen bg-black text-white;
+}
+
+/* Gradient sections */
+.section-gradient {
+  @apply bg-gradient-to-br from-black via-neutral-900 to-black;
+}
