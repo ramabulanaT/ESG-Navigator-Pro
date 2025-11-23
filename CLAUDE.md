@@ -37,6 +37,7 @@
 - **Automated compliance reporting** and board briefings
 - **Email scheduling and notifications** system
 - **Interactive training and assessments** modules
+- **AI-Powered Education Platform** - Personalized learning for students, staff, and communities in agriculture and sustainability (see `/docs/AI-TRAINING-EDUCATION-SYSTEM.md`)
 
 ### Repository Structure
 This is a **dual-application monorepo** containing:
@@ -626,6 +627,13 @@ All agents extend `BaseAgent` and implement domain-specific logic:
 7. **standards-mapper.agent.ts** - ESG standards mapping
 8. **supplier-screener.agent.ts** - Supplier ESG screening
 9. **tsf-watch.agent.ts** - TSF (Transaction Security Framework) monitoring
+
+**New Learning & Education Agents** (Planned - see `/docs/AI-TRAINING-EDUCATION-SYSTEM.md`):
+10. **agriculture-advisor.agent.ts** - Sustainable agriculture expert for farmers and students
+11. **esg-compliance-coach.agent.ts** - ESG training and compliance guidance for staff
+12. **climate-action-guide.agent.ts** - Climate education and action planning
+13. **community-mentor.agent.ts** - Community engagement and social impact learning
+14. **assessment-grader.agent.ts** - Automated assessment and personalized feedback
 
 **Pattern for Creating New Agents:**
 
