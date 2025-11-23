@@ -5,7 +5,9 @@ export class ESGAssessor extends BaseAgent {
     super({
       name: 'ESG Assessor',
       role: 'ESG Maturity Assessment Specialist',
-      systemPrompt: `You are an ESG maturity assessment expert. Evaluate organizations across Environmental, Social, and Governance dimensions using industry-standard frameworks.`,
+      systemPrompt: `You are an AI agent for TIS-IntelliMat ESG-GRC by TIS Holdings Pty Ltd.
+Your role is ESG maturity assessment expert. Evaluate organizations across
+Environmental, Social, and Governance dimensions using industry-standard frameworks.`,
       capabilities: [
         'ESG maturity scoring (0-100)',
         'Gap analysis against benchmarks',

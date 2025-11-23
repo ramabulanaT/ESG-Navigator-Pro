@@ -1,7 +1,11 @@
-# CLAUDE.md - AI Assistant Guide for ESG-Navigator-Pro
+# CLAUDE.md - AI Assistant Guide for TIS-IntelliMat Platform
 
+> **Company**: TIS Holdings Pty Ltd
+> **System**: TIS-IntelliMat
+> **Platform**: ESG-Navigator-Pro (Internal Development Platform)
+> **First Product**: ESG-GRC (ESG Governance, Risk & Compliance)
 > **Last Updated**: 2025-11-23
-> **Purpose**: Comprehensive guide for AI assistants working with the ESG-Navigator-Pro codebase
+> **Purpose**: Comprehensive guide for AI assistants working with the TIS-IntelliMat platform codebase
 
 ---
 
@@ -27,7 +31,24 @@
 
 ## Repository Overview
 
-**ESG-Navigator-Pro** is a production-ready ESG (Environmental, Social, Governance) compliance and supplier management platform with dual applications and comprehensive AI-powered features for ESG assessment, reporting, and supplier screening.
+### Brand Architecture
+
+**TIS Holdings Pty Ltd** owns and operates **TIS-IntelliMat**, an intelligent ESG platform that gives birth to various applications. The **ESG-Navigator-Pro** repository is the internal development platform that powers:
+
+1. **ESG-GRC** (First Product) - ESG Governance, Risk & Compliance platform
+2. **AI Learning Platform** (Second Product) - Education for students, staff, and communities
+3. **Future Applications** - Additional TIS-IntelliMat products
+
+**Important**: "ESG-Navigator-Pro" is an **internal platform name** only. All customer-facing branding uses:
+- **Company**: TIS Holdings Pty Ltd
+- **System**: TIS-IntelliMat
+- **Product**: ESG-GRC (or specific application name)
+
+For complete brand guidelines, see `/docs/BRAND-ARCHITECTURE.md`
+
+### Platform Overview
+
+The **ESG-Navigator-Pro platform** is a production-ready development platform for ESG (Environmental, Social, Governance) applications, featuring comprehensive AI-powered capabilities for assessment, reporting, supplier screening, and education.
 
 ### Key Features
 - **Multi-tenant SaaS platform** for ESG compliance management
@@ -962,7 +983,8 @@ const text = response.content[0].type === 'text'
 **ESG-Specific Context:**
 
 ```typescript
-const systemPrompt = `You are an ESG analyst for TIS-IntelliMat ESG Navigator.
+const systemPrompt = `You are an AI agent for TIS-IntelliMat, the intelligent ESG
+platform by TIS Holdings Pty Ltd. You are part of the ESG-GRC application.
 
 CURRENT PORTFOLIO DATA:
 - Total Supply Chain Value: R331M
@@ -1864,7 +1886,7 @@ esg-navigator/apps/api/src/middleware/*.ts           # Middleware
 
 ## Conclusion
 
-This CLAUDE.md file provides comprehensive guidance for AI assistants working with the ESG-Navigator-Pro codebase. It covers:
+This CLAUDE.md file provides comprehensive guidance for AI assistants working with the TIS-IntelliMat platform (ESG-Navigator-Pro codebase). It covers:
 
 - Complete repository structure and organization
 - Technology stack and architectural decisions

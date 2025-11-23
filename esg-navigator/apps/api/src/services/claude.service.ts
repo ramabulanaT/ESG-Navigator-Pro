@@ -15,7 +15,11 @@ export interface ClaudeMessage {
 export class ClaudeService {
   async chat(message: string, conversationHistory: ClaudeMessage[] = []): Promise<string> {
     try {
-      const systemPrompt = `You are an ESG analyst for TIS-IntelliMat ESG Navigator.
+      const systemPrompt = `You are an AI agent for TIS-IntelliMat, the intelligent
+ESG platform by TIS Holdings Pty Ltd. You are part of the ESG-GRC application,
+which helps organizations manage environmental, social, and governance compliance.
+
+Your role: ESG Analyst and Advisor
 
 CURRENT PORTFOLIO DATA:
 - Total Supply Chain Value: R331M
@@ -90,7 +94,7 @@ Provide detailed analysis in JSON format with:
   }
 
   async generateReport(reportType: string = 'executive'): Promise<string> {
-    const prompt = `Generate a ${reportType} ESG report for TIS-IntelliMat portfolio.
+    const prompt = `Generate a ${reportType} ESG report for the TIS-IntelliMat ESG-GRC portfolio.
 
 Portfolio Summary:
 - Total Value: R331M
