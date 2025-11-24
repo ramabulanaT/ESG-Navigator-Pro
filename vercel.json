@@ -1,1 +1,7 @@
-{"name":"intellimat","version":2}
+{
+  "name": "esg-navigator-pro",
+  "version": 2,
+  "buildCommand": "npm install --prefix esg-navigator/apps/web && npm run build --prefix esg-navigator/apps/web",
+  "outputDirectory": "esg-navigator/apps/web/.next",
+  "framework": "nextjs"
+}

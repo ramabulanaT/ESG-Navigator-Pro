@@ -1,0 +1,16 @@
+{
+  "name": "esg-navigator-pro",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix esg-navigator/apps/web",
+    "build": "npm install --prefix esg-navigator/apps/web && npm run build --prefix esg-navigator/apps/web",
+    "start": "npm run start --prefix esg-navigator/apps/web",
+    "lint": "npm run lint --prefix esg-navigator/apps/web"
+  },
+  "dependencies": {
+    "next": "^14.2.33",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
