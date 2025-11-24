@@ -1,0 +1,47 @@
+{
+  "domains": [
+    {
+      "domain": "tisholdings.co.za",
+      "type": "corporate",
+      "name": "TIS Holdings",
+      "description": "Corporate website for Technology Innovation Services Holdings",
+      "directory": "./tisholdings.co.za",
+      "ssl": {
+        "provider": "AWS ACM",
+        "region": "us-east-1",
+        "status": "pending_validation"
+      }
+    },
+    {
+      "domain": "tis-intellimat.net",
+      "type": "platform",
+      "name": "TIS IntelliMat",
+      "description": "ESG Navigator - Sustainability Management Platform",
+      "directory": "./tis-intellimat.net",
+      "aliases": [
+        "esgnavigator.ai",
+        "www.esgnavigator.ai"
+      ],
+      "ssl": {
+        "provider": "AWS ACM",
+        "region": "us-east-1",
+        "status": "pending_validation"
+      },
+      "linkedProject": "../esg-navigator"
+    }
+  ],
+  "awsCertificate": {
+    "id": "b758472f-4234-4846-a677-8468808909b9",
+    "region": "us-east-1",
+    "validationRecords": [
+      {
+        "domain": "tisholdings.co.za",
+        "cname": "_96d799ba46bd8567703350edfa04e09c.tisholdings.co.za"
+      },
+      {
+        "domain": "tis-intellimat.net",
+        "cname": "_a9983549cb446202db75e2f2867c0512.tis-intellimat.net"
+      }
+    ]
+  }
+}

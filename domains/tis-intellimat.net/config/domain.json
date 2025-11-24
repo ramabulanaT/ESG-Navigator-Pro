@@ -1,0 +1,25 @@
+{
+  "domain": "tis-intellimat.net",
+  "name": "TIS IntelliMat",
+  "description": "TIS IntelliMat - ESG Navigator Platform",
+  "ssl": {
+    "provider": "AWS ACM",
+    "certificateId": "b758472f-4234-4846-a677-8468808909b9",
+    "cname": "_a9983549cb446202db75e2f2867c0512.tis-intellimat.net",
+    "status": "pending_validation"
+  },
+  "dns": {
+    "provider": "Cloudflare",
+    "zone": "tis-intellimat.net"
+  },
+  "hosting": {
+    "platform": "Vercel",
+    "region": "us-east-1"
+  },
+  "routes": {
+    "apex": "tis-intellimat.net",
+    "www": "www.tis-intellimat.net",
+    "aliases": ["esgnavigator.ai", "www.esgnavigator.ai"]
+  },
+  "linkedProject": "../../../esg-navigator"
+}

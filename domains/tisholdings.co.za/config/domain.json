@@ -1,0 +1,23 @@
+{
+  "domain": "tisholdings.co.za",
+  "name": "TIS Holdings",
+  "description": "TIS Holdings - Technology Innovation Services",
+  "ssl": {
+    "provider": "AWS ACM",
+    "certificateId": "b758472f-4234-4846-a677-8468808909b9",
+    "cname": "_96d799ba46bd8567703350edfa04e09c.tisholdings.co.za",
+    "status": "pending_validation"
+  },
+  "dns": {
+    "provider": "Cloudflare",
+    "zone": "tisholdings.co.za"
+  },
+  "hosting": {
+    "platform": "Vercel",
+    "region": "us-east-1"
+  },
+  "routes": {
+    "apex": "tisholdings.co.za",
+    "www": "www.tisholdings.co.za"
+  }
+}
