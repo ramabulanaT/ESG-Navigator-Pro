@@ -1,1 +1,7 @@
-{"name":"intellimat","version":2}
+{
+  "version": 2,
+  "framework": "nextjs",
+  "installCommand": "npm install && cd esg-navigator && npm install",
+  "buildCommand": "cd esg-navigator/apps/web && npm run build",
+  "outputDirectory": "esg-navigator/apps/web/.next"
+}
