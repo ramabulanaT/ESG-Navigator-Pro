@@ -1,6 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-const PRIMARY_HOST = "www.esgnavigator.ai";
+
+// Primary domain for ESG Navigator (migrated from WordPress)
+const PRIMARY_HOST = "www.tis-holdings.com";
+const APEX_DOMAINS = ["tis-holdings.com", "tisholdings.blog", "www.tisholdings.blog"];
+
 const redirect308 = (url: URL) => NextResponse.redirect(url, 308);
 const isProd = process.env.VERCEL_ENV === "production";
 
@@ -9,8 +13,10 @@ export function middleware(req: NextRequest) {
   const host = req.headers.get("host") || "";
   const path = nextUrl.pathname;
 
-  // apex -> www
-  if (host === "esgnavigator.ai") {
+  // Redirect all alternate domains to primary (www.tis-holdings.com)
+  // tisholdings.blog -> www.tis-holdings.com
+  // tis-holdings.com -> www.tis-holdings.com
+  if (APEX_DOMAINS.includes(host)) {
     const url = nextUrl.clone();
     url.host = PRIMARY_HOST;
     return redirect308(url);
