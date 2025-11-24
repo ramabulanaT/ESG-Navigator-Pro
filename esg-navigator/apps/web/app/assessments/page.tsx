@@ -14,7 +14,7 @@ interface Assessment {
   score?: number
   progress?: number
   lastUpdated: string
-  IconComponent: React.ComponentType<{ className: string }>
+  IconComponent: React.ElementType<{ className?: string }>
 }
 
 const initialAssessments: Assessment[] = [

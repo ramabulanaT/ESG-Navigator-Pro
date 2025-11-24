@@ -1,1 +1,15 @@
-{"name":"intellimat","version":2}
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "framework": "nextjs",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "http://localhost:8080/:path*"
+    }
+  ]
+}

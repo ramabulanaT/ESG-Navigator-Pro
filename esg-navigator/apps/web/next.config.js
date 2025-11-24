@@ -1,13 +1,10 @@
 ﻿module.exports = {
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
-    ignoreBuildErrors: true,
+    // Catch type errors during build
+    tsconfigPath: './tsconfig.json',
   },
   eslint: {
-    // Skip ESLint during builds
-    ignoreDuringBuilds: true,
+    // Enable ESLint during builds to enforce code quality
+    dirs: ['app'],
   },
 }

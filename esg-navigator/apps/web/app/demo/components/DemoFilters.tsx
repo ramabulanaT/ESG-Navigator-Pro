@@ -46,13 +46,14 @@ export default function DemoFilters() {
   }, []);
 
   useEffect(() => {
-    const sp = new URLSearchParams(params.toString());
+    const sp = new URLSearchParams(params?.toString() || "");
     if (query) sp.set("q", query); else sp.delete("q");
     if (risks.length) sp.set("risk", risks.join(",")); else sp.delete("risk");
     if (sort && sort !== "score-desc") sp.set("sort", sort); else sp.delete("sort");
     const qs = sp.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-  }, [query, risks, sort]); // eslint-disable-line react-hooks/exhaustive-deps
+    const url = qs ? `${pathname || ""}?${qs}` : (pathname || "");
+    router.replace(url, { scroll: false });
+  }, [query, risks, sort, params, pathname, router]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     let alive = true;
