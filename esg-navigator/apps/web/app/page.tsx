@@ -1,8 +1,12 @@
 'use client'
+import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Shield, Zap, BarChart3, Users, Lock, Lightbulb } from 'lucide-react'
+import ScheduleDemo from '@/components/ScheduleDemo'
 
 export default function Home() {
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
@@ -50,22 +54,22 @@ export default function Home() {
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-            The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by Sibanye-Stillwater, Anglo American, and tier-1 enterprises. Powered by Anthropic Claude, AWS infrastructure, and IBM enterprise integration.
+            The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by leading companies in mining, energy, manufacturing, chemicals, and industrial sectors. Powered by Anthropic Claude, AWS infrastructure, and IBM enterprise integration.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link 
+            <Link
               href="/assessments"
               className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/50 transition inline-flex items-center gap-2"
             >
               Start Assessment <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link 
-              href="#contact"
+            <button
+              onClick={() => setIsDemoModalOpen(true)}
               className="px-8 py-4 border border-cyan-500 text-cyan-400 rounded-lg font-bold text-lg hover:bg-cyan-500/10 transition"
             >
               Schedule Demo
-            </Link>
+            </button>
           </div>
 
           {/* Stats */}
@@ -157,26 +161,102 @@ export default function Home() {
         </div>
       </section>
 
+      {/* University Training Section */}
+      <section className="py-24 bg-gradient-to-b from-blue-950/20 to-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold mb-4">University Training & Certification</h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Comprehensive ESG compliance curriculum designed for enterprises and educational institutions. Build expertise across 9 structured modules with certification pathways.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {[
+              {
+                title: "Beginner Level",
+                courses: ["ESG Fundamentals", "Emissions Accounting 101", "Standards Mapping"],
+                hours: "9 hours",
+                color: "from-cyan-400 to-blue-500"
+              },
+              {
+                title: "Intermediate Level",
+                courses: ["Agent Management", "Data Quality & Governance", "Assurance Preparation"],
+                hours: "7.5 hours",
+                color: "from-blue-500 to-purple-500"
+              },
+              {
+                title: "Advanced Level",
+                courses: ["ESG Reporting", "ESG Risk Management", "Advanced Analytics"],
+                hours: "10.5 hours",
+                color: "from-purple-500 to-pink-500"
+              }
+            ].map((level, i) => (
+              <div key={i} className={`${i === 2 ? 'md:col-span-2 md:w-1/2 md:mx-auto' : ''} bg-white/5 border border-white/10 rounded-xl p-8`}>
+                <div className={`h-1 w-16 bg-gradient-to-r ${level.color} rounded-full mb-4`}></div>
+                <h3 className="text-2xl font-bold mb-2">{level.title}</h3>
+                <p className="text-cyan-400 font-semibold mb-4">{level.hours} Total</p>
+                <ul className="space-y-2">
+                  {level.courses.map((course, j) => (
+                    <li key={j} className="text-gray-300 flex items-start gap-2">
+                      <span className="text-cyan-400 mt-1">✓</span>
+                      {course}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-white/5 border border-cyan-500/30 rounded-xl p-8 text-center">
+            <h3 className="text-2xl font-bold mb-4">Why Choose Our Training?</h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <div className="text-3xl font-bold text-cyan-400 mb-2">9</div>
+                <div className="text-gray-300">Comprehensive Modules</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-cyan-400 mb-2">27+</div>
+                <div className="text-gray-300">Total Learning Hours</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-cyan-400 mb-2">100%</div>
+                <div className="text-gray-300">Certification Upon Completion</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <Link
+              href="/training"
+              className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/50 transition inline-flex items-center gap-2"
+            >
+              Explore Training Modules <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section id="contact" className="py-24 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 border-y border-white/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your ESG Compliance?</h2>
           <p className="text-xl text-gray-300 mb-12">
-            Join leading mining companies and enterprises in automating compliance with AI
+            Join leading companies across industries in automating compliance with AI
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
+            <Link
               href="/assessments"
               className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/50 transition"
             >
               Access Platform
             </Link>
-            <a 
-              href="mailto:contact@tisholdings.com"
+            <button
+              onClick={() => setIsDemoModalOpen(true)}
               className="px-8 py-4 border border-cyan-500 text-cyan-400 rounded-lg font-bold text-lg hover:bg-cyan-500/10 transition"
             >
               Schedule Consultation
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -197,6 +277,8 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      <ScheduleDemo isOpen={isDemoModalOpen} onClose={() => setIsDemoModalOpen(false)} />
     </div>
   )
 }
