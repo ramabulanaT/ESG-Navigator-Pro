@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import claudeRoutes from './routes/claude.routes';
 import agentRoutes from './routes/agents.routes';
+import agentsV2Routes from './routes/agents-v2.routes';
 import authRoutes from './routes/auth.routes';
 import supplierRoutes from './routes/suppliers.routes';
 import { authenticate } from './middleware/auth.middleware';
@@ -38,12 +39,14 @@ app.use('/api/auth', authRoutes);
 // Protected routes
 app.use('/api/claude', authenticate, claudeRoutes);
 app.use('/api/agents', authenticate, agentRoutes);
+app.use('/api/agents/v2', authenticate, agentsV2Routes);
 app.use('/api/suppliers', supplierRoutes);
 
 app.listen(PORT, () => {
   console.log(`✅ Backend running on http://localhost:${PORT}`);
   console.log(`🤖 Claude AI: ${process.env.ANTHROPIC_API_KEY ? 'Configured' : 'Not configured'}`);
-  console.log(`🔧 9 AI Agents: Active`);
+  console.log(`🔧 9 AI Agents v1: Active`);
+  console.log(`🚀 2 AI Agents v2: Enhanced (ESG Assessment, Recommendations)`);
   console.log(`🔐 Authentication: Enabled`);
   console.log(`📊 TIS-IntelliMat Suppliers: 5`);
   console.log(`💰 Portfolio Value: R331M`);
@@ -62,7 +65,10 @@ app.listen(PORT, () => {
   console.log(`   - GET  /api/suppliers/filter/high-risk`);
   console.log(`   - GET  /api/suppliers/filter/top-performers`);
   console.log(`   - POST /api/claude/chat`);
-  console.log(`   - GET  /api/agents`);
+  console.log(`   - GET  /api/agents (v1 agents)`);
+  console.log(`   - GET  /api/agents/v2 (enhanced agents)`);
+  console.log(`   - POST /api/agents/v2/esg-assessment`);
+  console.log(`   - POST /api/agents/v2/recommendations`);
   console.log(``);
   console.log(`🔑 Demo: admin@tisholdings.co.za / admin123`);
 });
