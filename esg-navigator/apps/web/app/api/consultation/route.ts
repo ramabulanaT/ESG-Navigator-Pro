@@ -55,9 +55,14 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           to: 'contact@tisholdings.com',
           subject: `New Consultation Request from ${name} - ${company}`,
-          template: 'default',
+          template: 'consultation-request',
           data: {
-            userName: 'TIS Team',
+            name,
+            email,
+            company,
+            phone: phone || 'Not provided',
+            preferredDate: preferredDate || 'Not specified',
+            message: message || 'No message',
             platformUrl: request.headers.get('origin') || 'https://esg-navigator-pro.pages.dev'
           }
         }),
