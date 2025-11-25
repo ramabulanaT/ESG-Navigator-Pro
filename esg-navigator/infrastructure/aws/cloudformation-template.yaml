@@ -1,0 +1,290 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'ESG Navigator Multi-Domain Deployment - Lambda + S3 + CloudFront'
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: esg-navigator
+    Description: Project name for resource naming
+
+  Stage:
+    Type: String
+    Default: production
+    AllowedValues:
+      - production
+      - staging
+      - development
+    Description: Deployment stage
+
+  # Domain parameters
+  TISHoldingsDomain:
+    Type: String
+    Default: tis-holdings.com
+    Description: TIS Holdings corporate domain
+
+  ESGNavigatorDomain:
+    Type: String
+    Default: esgnavigator.ai
+    Description: ESG Navigator education domain
+
+  TISIntellimatDomain:
+    Type: String
+    Default: tis-intellimat.net
+    Description: TIS-Intellimat enterprise domain
+
+  # Certificate ARN (must be in us-east-1 for CloudFront)
+  ACMCertificateArn:
+    Type: String
+    Description: ARN of ACM certificate for all domains (us-east-1)
+
+Resources:
+  # ============================================
+  # S3 Buckets for Static Assets
+  # ============================================
+
+  StaticAssetsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${ProjectName}-static-${Stage}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [GET, HEAD]
+            AllowedOrigins: ['*']
+            MaxAge: 3600
+
+  # Bucket policy for CloudFront OAI
+  StaticAssetsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref StaticAssetsBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub '${StaticAssetsBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                'AWS:SourceArn': !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}'
+
+  # ============================================
+  # Lambda Functions (OpenNext Output)
+  # ============================================
+
+  # Server Lambda (SSR)
+  ServerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${ProjectName}-server-${Stage}'
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref DeploymentBucket
+        S3Key: !Sub 'builds/${Stage}/server-function.zip'
+      MemorySize: 1024
+      Timeout: 30
+      Environment:
+        Variables:
+          NODE_ENV: production
+          STAGE: !Ref Stage
+          TIS_HOLDINGS_DOMAIN: !Ref TISHoldingsDomain
+          ESG_NAVIGATOR_DOMAIN: !Ref ESGNavigatorDomain
+          TIS_INTELLIMAT_DOMAIN: !Ref TISIntellimatDomain
+
+  ServerFunctionUrl:
+    Type: AWS::Lambda::Url
+    Properties:
+      TargetFunctionArn: !GetAtt ServerFunction.Arn
+      AuthType: NONE
+      Cors:
+        AllowOrigins: ['*']
+        AllowMethods: [GET, POST, PUT, DELETE, PATCH, OPTIONS]
+        AllowHeaders: ['*']
+
+  ServerFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ServerFunction
+      Action: lambda:InvokeFunctionUrl
+      Principal: '*'
+      FunctionUrlAuthType: NONE
+
+  # Image Optimization Lambda
+  ImageOptimizationFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub '${ProjectName}-image-opt-${Stage}'
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref DeploymentBucket
+        S3Key: !Sub 'builds/${Stage}/image-function.zip'
+      MemorySize: 1536
+      Timeout: 30
+
+  # ============================================
+  # CloudFront Distribution (Multi-Domain)
+  # ============================================
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub 'ESG Navigator Multi-Domain - ${Stage}'
+
+        # All three domains
+        Aliases:
+          - !Ref TISHoldingsDomain
+          - !Sub 'www.${TISHoldingsDomain}'
+          - !Ref ESGNavigatorDomain
+          - !Sub 'www.${ESGNavigatorDomain}'
+          - !Ref TISIntellimatDomain
+          - !Sub 'www.${TISIntellimatDomain}'
+
+        # SSL Certificate
+        ViewerCertificate:
+          AcmCertificateArn: !Ref ACMCertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+
+        # Default behavior → Lambda (SSR)
+        DefaultCacheBehavior:
+          TargetOriginId: ServerLambda
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+          CachedMethods: [GET, HEAD, OPTIONS]
+          Compress: true
+          CachePolicyId: !Ref ServerCachePolicy
+          OriginRequestPolicyId: !Ref ServerOriginRequestPolicy
+
+        # Static assets behavior → S3
+        CacheBehaviors:
+          - PathPattern: '_next/static/*'
+            TargetOriginId: S3Static
+            ViewerProtocolPolicy: redirect-to-https
+            Compress: true
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # CachingOptimized
+
+          - PathPattern: 'static/*'
+            TargetOriginId: S3Static
+            ViewerProtocolPolicy: redirect-to-https
+            Compress: true
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+
+        # Origins
+        Origins:
+          # Lambda Function URL origin (SSR)
+          - Id: ServerLambda
+            DomainName: !Select [2, !Split ["/", !GetAtt ServerFunctionUrl.FunctionUrl]]
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols: [TLSv1.2]
+
+          # S3 Static Assets origin
+          - Id: S3Static
+            DomainName: !GetAtt StaticAssetsBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+            OriginAccessControlId: !Ref CloudFrontOAC
+
+  # Origin Access Control for S3
+  CloudFrontOAC:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub '${ProjectName}-oac-${Stage}'
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  # Cache Policy for Server
+  ServerCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: !Sub '${ProjectName}-server-cache-${Stage}'
+        DefaultTTL: 0
+        MaxTTL: 31536000
+        MinTTL: 0
+        ParametersInCacheKeyAndForwardedToOrigin:
+          EnableAcceptEncodingGzip: true
+          EnableAcceptEncodingBrotli: true
+          QueryStringsConfig:
+            QueryStringBehavior: all
+          HeadersConfig:
+            HeaderBehavior: whitelist
+            Headers:
+              - Accept
+              - Accept-Language
+              - Host
+              - CloudFront-Viewer-Country
+          CookiesConfig:
+            CookieBehavior: all
+
+  # Origin Request Policy for Server
+  ServerOriginRequestPolicy:
+    Type: AWS::CloudFront::OriginRequestPolicy
+    Properties:
+      OriginRequestPolicyConfig:
+        Name: !Sub '${ProjectName}-server-request-${Stage}'
+        QueryStringsConfig:
+          QueryStringBehavior: all
+        HeadersConfig:
+          HeaderBehavior: allViewerAndWhitelistCloudFront
+          Headers:
+            - CloudFront-Viewer-Country
+            - CloudFront-Viewer-Country-Region
+        CookiesConfig:
+          CookieBehavior: all
+
+  # ============================================
+  # Deployment Bucket (for Lambda code)
+  # ============================================
+
+  DeploymentBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${ProjectName}-deployments-${Stage}'
+      VersioningConfiguration:
+        Status: Enabled
+
+Outputs:
+  CloudFrontDistributionId:
+    Description: CloudFront Distribution ID
+    Value: !Ref CloudFrontDistribution
+    Export:
+      Name: !Sub '${ProjectName}-${Stage}-CloudFrontId'
+
+  CloudFrontDomainName:
+    Description: CloudFront Domain Name
+    Value: !GetAtt CloudFrontDistribution.DomainName
+    Export:
+      Name: !Sub '${ProjectName}-${Stage}-CloudFrontDomain'
+
+  ServerFunctionUrl:
+    Description: Server Lambda Function URL
+    Value: !GetAtt ServerFunctionUrl.FunctionUrl
+    Export:
+      Name: !Sub '${ProjectName}-${Stage}-ServerUrl'
+
+  StaticAssetsBucket:
+    Description: S3 Bucket for Static Assets
+    Value: !Ref StaticAssetsBucket
+    Export:
+      Name: !Sub '${ProjectName}-${Stage}-StaticBucket'
+
+  DeploymentInstructions:
+    Description: Next steps for deployment
+    Value: |
+      1. Configure DNS records for all three domains to point to CloudFront
+      2. Upload Lambda functions to deployment bucket
+      3. Upload static assets to static bucket
+      4. Invalidate CloudFront cache after deployment
