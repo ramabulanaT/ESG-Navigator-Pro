@@ -19,7 +19,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "./*"
       ]
     },
     "incremental": true,
@@ -32,7 +32,10 @@
   },
   "include": [
     "next-env.d.ts",
-    "src/**/*",
+    "app/**/*",
+    "components/**/*",
+    "lib/**/*",
+    "hooks/**/*",
     "next.config.js",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
