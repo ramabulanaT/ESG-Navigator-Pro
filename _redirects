@@ -1,0 +1,77 @@
+# ESG Navigator - Comprehensive Redirect Configuration
+# Format: from to [status]
+# Compatible with: Netlify, Vercel, Cloudflare Pages
+
+# ============================================================================
+# PRIMARY DOMAIN REDIRECTS
+# ============================================================================
+
+# Apex domain to www (permanent redirect)
+https://esgnavigator.ai/* https://www.esgnavigator.ai/:splat 301!
+http://esgnavigator.ai/* https://www.esgnavigator.ai/:splat 301!
+
+# Force HTTPS on www
+http://www.esgnavigator.ai/* https://www.esgnavigator.ai/:splat 301!
+
+# ============================================================================
+# SUBDOMAIN MAPPINGS
+# ============================================================================
+
+# API Subdomain - Production
+# api.esgnavigator.ai should proxy to backend API (handled by infrastructure)
+
+# App Subdomain - Alternative Interface (TIS Platform)
+# app.esgnavigator.ai can be a separate deployment or redirect to main app
+# If not deployed separately, redirect to main:
+# https://app.esgnavigator.ai/* https://www.esgnavigator.ai/dashboard/:splat 302
+
+# ============================================================================
+# STAGING ENVIRONMENT REDIRECTS
+# ============================================================================
+
+# Staging Frontend - separate deployment
+# staging.esgnavigator.ai (no redirect, independent environment)
+
+# Staging API - separate deployment
+# staging-api.esgnavigator.ai (no redirect, independent environment)
+
+# ============================================================================
+# API ROUTE CLEANUP
+# ============================================================================
+
+# Remove .js extensions from API routes
+/api/*.js /api/:splat 308
+
+# Remove trailing slashes (optional, uncomment if needed)
+# /* /index 301
+
+# ============================================================================
+# LEGACY ROUTES & BACKWARDS COMPATIBILITY
+# ============================================================================
+
+# If migrating from old URLs, add redirects here
+# Example: /old-assessment -> /assessments
+# /old-assessment/* /assessments/:splat 301
+
+# ============================================================================
+# SECURITY & ERROR HANDLING
+# ============================================================================
+
+# Block access to sensitive files
+/.env* / 404
+/.git* / 404
+/config/* / 404
+
+# ============================================================================
+# PROXYING RULES (For Netlify/Vercel)
+# ============================================================================
+
+# API proxy (if using serverless functions)
+/api/* https://api.esgnavigator.ai/:splat 200
+
+# ============================================================================
+# SPA FALLBACK (Single Page Application)
+# ============================================================================
+
+# Catch-all for SPA routing (Next.js handles this internally)
+# /* /index.html 200
