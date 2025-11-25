@@ -1,8 +1,12 @@
 'use client'
+import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Shield, Zap, BarChart3, Users, Lock, Lightbulb } from 'lucide-react'
+import ConsultationModal from '@/components/ConsultationModal'
 
 export default function Home() {
+  const [isConsultationOpen, setIsConsultationOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
@@ -60,12 +64,12 @@ export default function Home() {
             >
               Start Assessment <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link 
-              href="#contact"
+            <button
+              onClick={() => setIsConsultationOpen(true)}
               className="px-8 py-4 border border-cyan-500 text-cyan-400 rounded-lg font-bold text-lg hover:bg-cyan-500/10 transition"
             >
               Schedule Demo
-            </Link>
+            </button>
           </div>
 
           {/* Stats */}
@@ -171,12 +175,12 @@ export default function Home() {
             >
               Access Platform
             </Link>
-            <a 
-              href="mailto:contact@tisholdings.com"
+            <button
+              onClick={() => setIsConsultationOpen(true)}
               className="px-8 py-4 border border-cyan-500 text-cyan-400 rounded-lg font-bold text-lg hover:bg-cyan-500/10 transition"
             >
               Schedule Consultation
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -197,6 +201,12 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Consultation Modal */}
+      <ConsultationModal
+        isOpen={isConsultationOpen}
+        onClose={() => setIsConsultationOpen(false)}
+      />
     </div>
   )
 }

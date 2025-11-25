@@ -23,6 +23,20 @@ const emailTemplates: Record<string, (data: Record<string, string>) => string> =
     <p><a href="${data.platformUrl}/assessments">View your results</a></p>
     <p>Best regards,<br>TIS Holdings Team</p>
   `,
+  'consultation-request': (data) => `
+    <h1>New Consultation Request</h1>
+    <p>A new consultation request has been submitted:</p>
+    <ul>
+      <li><strong>Name:</strong> ${data.name}</li>
+      <li><strong>Email:</strong> ${data.email}</li>
+      <li><strong>Company:</strong> ${data.company}</li>
+      <li><strong>Phone:</strong> ${data.phone || 'Not provided'}</li>
+      <li><strong>Preferred Date:</strong> ${data.preferredDate || 'Not specified'}</li>
+      <li><strong>Message:</strong> ${data.message || 'No message'}</li>
+    </ul>
+    <p>Please follow up within 24 hours.</p>
+    <p><a href="${data.platformUrl}">View Platform</a></p>
+  `,
   'default': (data) => `
     <h1>ESG Navigator Notification</h1>
     <p>Hello ${data.userName},</p>
