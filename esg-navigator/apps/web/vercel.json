@@ -9,7 +9,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://api.esgnavigator.ai/:path*"
+      "destination": "https://c42puawyg8.execute-api.us-east-1.amazonaws.com/Prod/:path*"
     }
   ],
   "redirects": [
