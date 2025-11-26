@@ -29,7 +29,7 @@ export const TIS_INTELLIMAT_PORTFOLIO: Portfolio = {
 export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
   {
     id: '1',
-    name: 'Eskom Holdings SOC Ltd',
+    name: 'National Power Utilities Corp',
     contractValue: 'R120M',
     contractValueNumeric: 120000000,
     esgScore: 65,
@@ -39,12 +39,12 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
     certifications: ['ISO 14001:2015'],
     lastAudit: '2024-08-15',
     nextAuditDue: '2025-02-15',
-    
+
     contact: {
       primaryContact: 'Supply Chain Manager',
-      email: 'procurement@eskom.co.za',
+      email: 'procurement@powerutilities.example',
       phone: '+27 11 800 8111',
-      address: 'Megawatt Park, Maxwell Drive, Sunninghill',
+      address: 'Energy Park, Business District',
       country: 'South Africa'
     },
     
@@ -61,7 +61,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
           date: '2024-06-20',
           type: 'Environmental',
           severity: 'major',
-          description: 'Exceeded emission limits at Kendal Power Station',
+          description: 'Exceeded emission limits at main power generation facility',
           status: 'in-progress',
           remediation: 'Installing new scrubber technology, completion Q2 2025'
         },
@@ -69,7 +69,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
           date: '2024-03-10',
           type: 'Health & Safety',
           severity: 'moderate',
-          description: 'Inadequate safety protocols at Matla station',
+          description: 'Inadequate safety protocols at regional facility',
           status: 'resolved',
           remediation: 'Updated safety procedures and retraining completed'
         },
@@ -85,7 +85,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
       auditHistory: [
         {
           date: '2024-08-15',
-          auditor: 'TIS ESG Audit Team',
+          auditor: 'ESG Navigator Audit Team',
           type: 'Comprehensive ESG Audit',
           findings: [
             'High carbon intensity requires urgent attention',
@@ -141,7 +141,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
   
   {
     id: '2',
-    name: 'Multotec Processing Equipment (Pty) Ltd',
+    name: 'Industrial Processing Solutions Ltd',
     contractValue: 'R89M',
     contractValueNumeric: 89000000,
     esgScore: 76,
@@ -151,12 +151,12 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
     certifications: ['ISO 14001:2015', 'OHSAS 18001:2007', 'ISO 9001:2015'],
     lastAudit: '2024-09-01',
     nextAuditDue: '2025-03-01',
-    
+
     contact: {
       primaryContact: 'ESG Compliance Officer',
-      email: 'sustainability@multotec.com',
+      email: 'sustainability@industrialprocessing.example',
       phone: '+27 11 923 7300',
-      address: '1 Allandale Road, Midrand',
+      address: 'Industrial Park, Manufacturing District',
       country: 'South Africa'
     },
     
@@ -181,7 +181,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
       auditHistory: [
         {
           date: '2024-09-01',
-          auditor: 'SGS South Africa',
+          auditor: 'Independent ESG Auditors',
           type: 'ISO 14001 Surveillance Audit',
           findings: [
             'Strong environmental management system',
@@ -231,7 +231,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
   
   {
     id: '3',
-    name: 'Anglo American Platinum Limited',
+    name: 'Premier Mining Resources Ltd',
     contractValue: 'R67M',
     contractValueNumeric: 67000000,
     esgScore: 82,
@@ -241,12 +241,12 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
     certifications: ['ISO 14001:2015', 'ISO 45001:2018', 'SA 8000:2014', 'ISO 50001:2018'],
     lastAudit: '2024-09-20',
     nextAuditDue: '2025-03-20',
-    
+
     contact: {
       primaryContact: 'Head of Sustainability',
-      email: 'sustainability@angloamerican.com',
+      email: 'sustainability@premiermining.example',
       phone: '+27 11 638 9111',
-      address: '55 Marshall Street, Johannesburg',
+      address: 'Mining District, Industrial Zone',
       country: 'South Africa'
     },
     
@@ -262,7 +262,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
       auditHistory: [
         {
           date: '2024-09-20',
-          auditor: 'EY Climate Change and Sustainability',
+          auditor: 'Global ESG Consulting Group',
           type: 'Comprehensive ESG Assessment',
           findings: [
             'Industry-leading ESG practices',
@@ -313,7 +313,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
   
   {
     id: '4',
-    name: 'Sasol Chemical Industries Limited',
+    name: 'Chemical Manufacturing Corp',
     contractValue: 'R55M',
     contractValueNumeric: 55000000,
     esgScore: 71,
@@ -323,12 +323,12 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
     certifications: ['ISO 14001:2015', 'ISO 9001:2015', 'RC14001'],
     lastAudit: '2024-08-30',
     nextAuditDue: '2025-02-28',
-    
+
     contact: {
       primaryContact: 'Sustainability Manager',
-      email: 'sustainability@sasol.com',
+      email: 'sustainability@chemicalcorp.example',
       phone: '+27 10 344 5000',
-      address: '1 Sturdee Avenue, Rosebank',
+      address: 'Chemical Park, Industrial District',
       country: 'South Africa'
     },
     
@@ -345,7 +345,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
           date: '2024-07-15',
           type: 'Environmental',
           severity: 'moderate',
-          description: 'Air quality exceedance at Secunda operations',
+          description: 'Air quality exceedance at primary production facility',
           status: 'in-progress',
           remediation: 'Air quality improvement plan submitted to regulator'
         },
@@ -361,7 +361,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
       auditHistory: [
         {
           date: '2024-08-30',
-          auditor: 'Bureau Veritas',
+          auditor: 'Certification Standards Group',
           type: 'ISO 14001 Certification Audit',
           findings: [
             'Comprehensive environmental management system',
@@ -417,7 +417,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
   
   {
     id: '5',
-    name: 'Siemens South Africa (Pty) Ltd',
+    name: 'Global Technology Solutions Ltd',
     contractValue: 'R45M',
     contractValueNumeric: 45000000,
     esgScore: 88,
@@ -427,12 +427,12 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
     certifications: ['ISO 14001:2015', 'ISO 45001:2018', 'ISO 50001:2018', 'ISO 27001:2013'],
     lastAudit: '2024-10-05',
     nextAuditDue: '2025-04-05',
-    
+
     contact: {
       primaryContact: 'Head of ESG',
-      email: 'esg.za@siemens.com',
+      email: 'esg@globaltechsolutions.example',
       phone: '+27 11 652 2000',
-      address: '108 Leeukop Road, Sunninghill',
+      address: 'Tech Park, Innovation District',
       country: 'South Africa'
     },
     
@@ -448,7 +448,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
       auditHistory: [
         {
           date: '2024-10-05',
-          auditor: 'TÜV SÜD',
+          auditor: 'International Quality Auditors',
           type: 'Integrated Management System Audit',
           findings: [
             'World-class ESG management',

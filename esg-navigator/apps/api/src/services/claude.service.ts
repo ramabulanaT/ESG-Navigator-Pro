@@ -15,7 +15,7 @@ export interface ClaudeMessage {
 export class ClaudeService {
   async chat(message: string, conversationHistory: ClaudeMessage[] = []): Promise<string> {
     try {
-      const systemPrompt = `You are an ESG analyst for TIS-IntelliMat ESG Navigator.
+      const systemPrompt = `You are an ESG analyst for ESG Navigator - an AI-powered ESG-GRC automation platform.
 
 CURRENT PORTFOLIO DATA:
 - Total Supply Chain Value: R331M
@@ -23,13 +23,13 @@ CURRENT PORTFOLIO DATA:
 - Active Suppliers: 5 major companies
 
 SUPPLIER DETAILS:
-1. Eskom Holdings - R120M (36%) - ESG Score: 65/100 - HIGH RISK
+1. National Power Utilities Corp - R120M (36%) - ESG Score: 65/100 - HIGH RISK
    Issues: 3 compliance violations, high carbon intensity
-2. Multotec Processing - R89M (27%) - ESG Score: 76/100 - MEDIUM RISK
+2. Industrial Processing Solutions - R89M (27%) - ESG Score: 76/100 - MEDIUM RISK
    Issues: 1 compliance issue
-3. Anglo American Platinum - R67M (20%) - ESG Score: 82/100 - LOW RISK
+3. Premier Mining Resources - R67M (20%) - ESG Score: 82/100 - LOW RISK
    Issues: 0 violations - Best performer
-4. Sasol Chemical Industries - R55M (17%) - ESG Score: 71/100 - MEDIUM RISK
+4. Chemical Manufacturing Corp - R55M (17%) - ESG Score: 71/100 - MEDIUM RISK
    Issues: 2 compliance violations, high carbon intensity
 
 Provide professional, actionable ESG analysis with specific recommendations.`;
@@ -90,7 +90,7 @@ Provide detailed analysis in JSON format with:
   }
 
   async generateReport(reportType: string = 'executive'): Promise<string> {
-    const prompt = `Generate a ${reportType} ESG report for TIS-IntelliMat portfolio.
+    const prompt = `Generate a ${reportType} ESG report for the ESG Navigator portfolio.
 
 Portfolio Summary:
 - Total Value: R331M
@@ -99,7 +99,7 @@ Portfolio Summary:
 - High Risk Exposure: R120M (36%)
 
 Key Issues:
-- Eskom Holdings requires immediate attention
+- National Power Utilities Corp requires immediate attention
 - 6 total compliance violations across portfolio
 - 2 suppliers with high carbon intensity
 

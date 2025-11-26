@@ -12,16 +12,16 @@ const emailTemplates: Record<string, (data: Record<string, string>) => string> =
   welcome: (data) => `
     <h1>Welcome to ESG Navigator</h1>
     <p>Hello ${data.userName},</p>
-    <p>Welcome to TIS Holdings' ESG Navigator platform - the world's first comprehensive AI-powered ESG-GRC automation system.</p>
+    <p>Welcome to the ESG Navigator platform - a comprehensive AI-powered ESG-GRC automation system for enterprises.</p>
     <p><a href="${data.platformUrl}">Access your platform here</a></p>
-    <p>Best regards,<br>TIS Holdings Team</p>
+    <p>Best regards,<br>ESG Navigator Team</p>
   `,
   'assessment-complete': (data) => `
     <h1>Assessment Complete</h1>
     <p>Hello ${data.userName},</p>
     <p>Your ${data.assessmentType} assessment has been completed with a score of ${data.score}.</p>
     <p><a href="${data.platformUrl}/assessments">View your results</a></p>
-    <p>Best regards,<br>TIS Holdings Team</p>
+    <p>Best regards,<br>ESG Navigator Team</p>
   `,
   'consultation-request': (data) => `
     <h1>New Consultation Request</h1>
@@ -42,7 +42,7 @@ const emailTemplates: Record<string, (data: Record<string, string>) => string> =
     <p>Hello ${data.userName},</p>
     <p>This is a test notification from ESG Navigator.</p>
     <p><a href="${data.platformUrl}">Visit your platform</a></p>
-    <p>Best regards,<br>TIS Holdings Team</p>
+    <p>Best regards,<br>ESG Navigator Team</p>
   `
 }
 

@@ -45,7 +45,7 @@ app.listen(PORT, () => {
   console.log(`🤖 Claude AI: ${process.env.ANTHROPIC_API_KEY ? 'Configured' : 'Not configured'}`);
   console.log(`🔧 9 AI Agents: Active`);
   console.log(`🔐 Authentication: Enabled`);
-  console.log(`📊 TIS-IntelliMat Suppliers: 5`);
+  console.log(`📊 ESG Navigator Suppliers: 5`);
   console.log(`💰 Portfolio Value: R331M`);
   console.log(``);
   console.log(`📊 Endpoints:`);
@@ -64,5 +64,5 @@ app.listen(PORT, () => {
   console.log(`   - POST /api/claude/chat`);
   console.log(`   - GET  /api/agents`);
   console.log(``);
-  console.log(`🔑 Demo: admin@tisholdings.co.za / admin123`);
+  console.log(`🔑 Demo: admin@esgnavigator.ai / admin123`);
 });

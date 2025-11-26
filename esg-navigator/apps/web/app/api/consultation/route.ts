@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          to: 'contact@tisholdings.com',
+          to: 'support@esgnavigator.ai',
           subject: `New Consultation Request from ${name} - ${company}`,
           template: 'consultation-request',
           data: {

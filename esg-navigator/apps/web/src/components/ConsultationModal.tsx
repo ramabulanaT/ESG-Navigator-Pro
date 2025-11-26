@@ -64,7 +64,7 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
         message: ''
       })
     } catch (err) {
-      setError('Failed to submit. Please try again or email us directly at contact@tisholdings.com')
+      setError('Failed to submit. Please try again or email us directly at support@esgnavigator.ai')
     } finally {
       setIsSubmitting(false)
     }
@@ -265,7 +265,7 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
               </button>
 
               <p className="text-xs text-gray-500 text-center">
-                By submitting, you agree to be contacted by TIS Holdings regarding your ESG compliance needs.
+                By submitting, you agree to be contacted by ESG Navigator regarding your ESG compliance needs.
               </p>
             </form>
           )}
