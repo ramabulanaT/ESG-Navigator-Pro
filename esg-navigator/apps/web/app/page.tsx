@@ -33,7 +33,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center pt-32 pb-20 overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
@@ -45,7 +45,7 @@ export default function Home() {
             <span className="text-cyan-400 font-semibold">AI-Powered ESG-GRC Automation</span>
           </div>
           
-          <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-8 leading-tight">
             Enterprise Compliance,
             <br />
             <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
@@ -53,11 +53,11 @@ export default function Home() {
             </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
             The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by Sibanye-Stillwater, Anglo American, and tier-1 enterprises. Powered by Anthropic Claude, AWS infrastructure, and IBM enterprise integration.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
             <Link 
               href="/assessments"
               className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/50 transition inline-flex items-center gap-2"
@@ -73,22 +73,22 @@ export default function Home() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20">
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
-              <div className="text-3xl font-bold text-cyan-400">R331M+</div>
-              <div className="text-sm text-gray-400 mt-2">Supply Chain Value</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-8">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-4 md:p-6 backdrop-blur">
+              <div className="text-2xl md:text-3xl font-bold text-cyan-400">R331M+</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-2">Supply Chain Value</div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
-              <div className="text-3xl font-bold text-cyan-400">87.2%</div>
-              <div className="text-sm text-gray-400 mt-2">Compliance Rate</div>
+            <div className="bg-white/5 border border-white/10 rounded-lg p-4 md:p-6 backdrop-blur">
+              <div className="text-2xl md:text-3xl font-bold text-cyan-400">87.2%</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-2">Compliance Rate</div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
-              <div className="text-3xl font-bold text-cyan-400">142+</div>
-              <div className="text-sm text-gray-400 mt-2">Assessment Questions</div>
+            <div className="bg-white/5 border border-white/10 rounded-lg p-4 md:p-6 backdrop-blur">
+              <div className="text-2xl md:text-3xl font-bold text-cyan-400">142+</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-2">Assessment Questions</div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
-              <div className="text-3xl font-bold text-cyan-400">6</div>
-              <div className="text-sm text-gray-400 mt-2">Integrated Frameworks</div>
+            <div className="bg-white/5 border border-white/10 rounded-lg p-4 md:p-6 backdrop-blur">
+              <div className="text-2xl md:text-3xl font-bold text-cyan-400">6</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-2">Integrated Frameworks</div>
             </div>
           </div>
         </div>
