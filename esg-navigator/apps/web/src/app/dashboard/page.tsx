@@ -116,9 +116,9 @@ export default function DashboardPage() {
               <div className="text-center text-gray-500 py-12">
                 <p className="mb-4">Ask me anything about your ESG portfolio!</p>
                 <div className="space-y-2 text-sm">
-                  <p>Try: "Which supplier has the highest ESG risk?"</p>
-                  <p>Try: "Generate an executive report"</p>
-                  <p>Try: "Calculate our financial risk exposure"</p>
+                  <p>Try: &quot;Which supplier has the highest ESG risk?&quot;</p>
+                  <p>Try: &quot;Generate an executive report&quot;</p>
+                  <p>Try: &quot;Calculate our financial risk exposure&quot;</p>
                 </div>
               </div>
             ) : (

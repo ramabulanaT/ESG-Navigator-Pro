@@ -147,7 +147,7 @@ export default function EmailTestPage() {
           <h3 className="text-white font-semibold mb-3">Next Steps:</h3>
           <ol className="space-y-2 text-gray-300">
             <li><span className="text-purple-400 font-semibold">1.</span> Enter your email address</li>
-            <li><span className="text-purple-400 font-semibold">2.</span> Click "Send Test Email"</li>
+            <li><span className="text-purple-400 font-semibold">2.</span> Click &quot;Send Test Email&quot;</li>
             <li><span className="text-purple-400 font-semibold">3.</span> Check your inbox for the test email</li>
             <li><span className="text-purple-400 font-semibold">4.</span> Once working, integrate into dashboard</li>
           </ol>

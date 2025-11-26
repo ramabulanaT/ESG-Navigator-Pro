@@ -12,7 +12,8 @@ export function useWebSocket() {
     // ref.current.onopen = () => setConnected(true)
     // ref.current.onmessage = (e) => setLastMessage(JSON.parse(e.data))
     // ref.current.onclose = () => setConnected(false)
-    return () => { if (ref.current) ref.current.close() }
+    const socket = ref.current
+    return () => { if (socket) socket.close() }
   }, [])
 
   return { connected, lastMessage }
