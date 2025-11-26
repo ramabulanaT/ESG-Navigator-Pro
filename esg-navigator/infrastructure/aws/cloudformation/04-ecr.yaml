@@ -1,0 +1,153 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'ESG Navigator - ECR Repositories'
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: production
+    Description: Environment name for resource tagging
+
+  ImageRetentionCount:
+    Type: Number
+    Default: 10
+    Description: Number of images to retain per repository
+
+Resources:
+  # ECR Repository for API
+  APIRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub '${EnvironmentName}/esg-navigator-api'
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      ImageTagMutability: MUTABLE
+      EncryptionConfiguration:
+        EncryptionType: AES256
+      LifecyclePolicy:
+        LifecyclePolicyText: !Sub |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep last ${ImageRetentionCount} images",
+                "selection": {
+                  "tagStatus": "any",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": ${ImageRetentionCount}
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-esg-navigator-api'
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ECR Repository for Web
+  WebRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub '${EnvironmentName}/esg-navigator-web'
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      ImageTagMutability: MUTABLE
+      EncryptionConfiguration:
+        EncryptionType: AES256
+      LifecyclePolicy:
+        LifecyclePolicyText: !Sub |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep last ${ImageRetentionCount} images",
+                "selection": {
+                  "tagStatus": "any",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": ${ImageRetentionCount}
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-esg-navigator-web'
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # ECR Repository for Nginx (optional)
+  NginxRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub '${EnvironmentName}/esg-navigator-nginx'
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      ImageTagMutability: MUTABLE
+      EncryptionConfiguration:
+        EncryptionType: AES256
+      LifecyclePolicy:
+        LifecyclePolicyText: !Sub |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep last ${ImageRetentionCount} images",
+                "selection": {
+                  "tagStatus": "any",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": ${ImageRetentionCount}
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-esg-navigator-nginx'
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+Outputs:
+  APIRepositoryUri:
+    Description: ECR Repository URI for API
+    Value: !GetAtt APIRepository.RepositoryUri
+    Export:
+      Name: !Sub '${EnvironmentName}-APIRepositoryUri'
+
+  APIRepositoryArn:
+    Description: ECR Repository ARN for API
+    Value: !GetAtt APIRepository.Arn
+    Export:
+      Name: !Sub '${EnvironmentName}-APIRepositoryArn'
+
+  WebRepositoryUri:
+    Description: ECR Repository URI for Web
+    Value: !GetAtt WebRepository.RepositoryUri
+    Export:
+      Name: !Sub '${EnvironmentName}-WebRepositoryUri'
+
+  WebRepositoryArn:
+    Description: ECR Repository ARN for Web
+    Value: !GetAtt WebRepository.Arn
+    Export:
+      Name: !Sub '${EnvironmentName}-WebRepositoryArn'
+
+  NginxRepositoryUri:
+    Description: ECR Repository URI for Nginx
+    Value: !GetAtt NginxRepository.RepositoryUri
+    Export:
+      Name: !Sub '${EnvironmentName}-NginxRepositoryUri'
+
+  NginxRepositoryArn:
+    Description: ECR Repository ARN for Nginx
+    Value: !GetAtt NginxRepository.Arn
+    Export:
+      Name: !Sub '${EnvironmentName}-NginxRepositoryArn'

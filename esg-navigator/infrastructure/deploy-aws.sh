@@ -1,30 +1,45 @@
 ﻿#!/bin/bash
-# AWS ECS Deployment Script
+# ESG Navigator AWS Deployment Script
+# This is a quick deployment script for building and deploying to existing AWS infrastructure
 
-echo "🚀 Deploying ESG Navigator to AWS..."
+set -e
 
-# Variables
-AWS_REGION="us-east-1"
-ECR_REGISTRY="your-account-id.dkr.ecr.us-east-1.amazonaws.com"
-PROJECT_NAME="esg-navigator"
+echo "=========================================="
+echo "ESG Navigator Quick Deploy"
+echo "=========================================="
 
-# Build and push Docker images
-echo "📦 Building Docker images..."
-docker build -t ${PROJECT_NAME}-api:latest -f apps/api/Dockerfile .
-docker build -t ${PROJECT_NAME}-web:latest -f apps/web/Dockerfile .
+# Configuration
+AWS_REGION="${AWS_REGION:-us-east-1}"
+ENVIRONMENT="${ENVIRONMENT:-production}"
 
-echo "🔐 Logging in to ECR..."
-aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+# Get script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+AWS_SCRIPTS_DIR="${SCRIPT_DIR}/aws/scripts"
 
-echo "📤 Pushing images to ECR..."
-docker tag ${PROJECT_NAME}-api:latest ${ECR_REGISTRY}/${PROJECT_NAME}-api:latest
-docker tag ${PROJECT_NAME}-web:latest ${ECR_REGISTRY}/${PROJECT_NAME}-web:latest
+# Check if full infrastructure deployment is needed
+if [[ "$1" == "--full" ]] || [[ "$1" == "-f" ]]; then
+    echo "Running full infrastructure deployment..."
+    source "${AWS_SCRIPTS_DIR}/deploy-infrastructure.sh"
+    exit 0
+fi
 
-docker push ${ECR_REGISTRY}/${PROJECT_NAME}-api:latest
-docker push ${ECR_REGISTRY}/${PROJECT_NAME}-web:latest
+# Quick deploy: build images and update services
+echo "Running quick deploy (build + service update)..."
+echo ""
 
-echo "🔄 Updating ECS services..."
-aws ecs update-service --cluster ${PROJECT_NAME}-cluster --service ${PROJECT_NAME}-api --force-new-deployment --region ${AWS_REGION}
-aws ecs update-service --cluster ${PROJECT_NAME}-cluster --service ${PROJECT_NAME}-web --force-new-deployment --region ${AWS_REGION}
+# Step 1: Build and push Docker images
+echo "Step 1: Building and pushing Docker images..."
+"${AWS_SCRIPTS_DIR}/build-and-push.sh"
 
-echo "✅ Deployment complete!"
+# Step 2: Deploy services
+echo ""
+echo "Step 2: Deploying services..."
+"${AWS_SCRIPTS_DIR}/deploy-services.sh"
+
+echo ""
+echo "=========================================="
+echo "Deployment complete!"
+echo "=========================================="
+echo ""
+echo "For full infrastructure deployment, run:"
+echo "  $0 --full"

@@ -1,0 +1,217 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'ESG Navigator - Database Infrastructure (RDS PostgreSQL & ElastiCache Redis)'
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: production
+    Description: Environment name for resource tagging
+
+  DBInstanceClass:
+    Type: String
+    Default: db.t3.medium
+    AllowedValues:
+      - db.t3.micro
+      - db.t3.small
+      - db.t3.medium
+      - db.t3.large
+      - db.r5.large
+      - db.r5.xlarge
+    Description: RDS instance type
+
+  DBAllocatedStorage:
+    Type: Number
+    Default: 20
+    MinValue: 20
+    MaxValue: 1000
+    Description: Allocated storage in GB
+
+  DBName:
+    Type: String
+    Default: esgnavigator
+    Description: Database name
+
+  DBUsername:
+    Type: String
+    Default: esguser
+    NoEcho: true
+    Description: Database master username
+
+  DBPassword:
+    Type: String
+    NoEcho: true
+    MinLength: 8
+    MaxLength: 128
+    Description: Database master password (min 8 characters)
+
+  MultiAZ:
+    Type: String
+    Default: 'false'
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Description: Enable Multi-AZ deployment for high availability
+
+  CacheNodeType:
+    Type: String
+    Default: cache.t3.micro
+    AllowedValues:
+      - cache.t3.micro
+      - cache.t3.small
+      - cache.t3.medium
+      - cache.r5.large
+    Description: ElastiCache node type
+
+  CacheNumNodes:
+    Type: Number
+    Default: 1
+    MinValue: 1
+    MaxValue: 6
+    Description: Number of cache nodes
+
+Resources:
+  # RDS PostgreSQL Instance
+  RDSInstance:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
+    UpdateReplacePolicy: Snapshot
+    Properties:
+      DBInstanceIdentifier: !Sub '${EnvironmentName}-esg-navigator-db'
+      DBName: !Ref DBName
+      Engine: postgres
+      EngineVersion: '15.4'
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref DBAllocatedStorage
+      StorageType: gp3
+      StorageEncrypted: true
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      DBSubnetGroupName:
+        Fn::ImportValue: !Sub '${EnvironmentName}-DatabaseSubnetGroup'
+      VPCSecurityGroups:
+        - Fn::ImportValue: !Sub '${EnvironmentName}-RDSSecurityGroupId'
+      MultiAZ: !Ref MultiAZ
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: '03:00-04:00'
+      PreferredMaintenanceWindow: 'sun:04:00-sun:05:00'
+      AutoMinorVersionUpgrade: true
+      DeletionProtection: true
+      EnablePerformanceInsights: true
+      PerformanceInsightsRetentionPeriod: 7
+      MonitoringInterval: 60
+      MonitoringRoleArn: !GetAtt RDSMonitoringRole.Arn
+      EnableCloudwatchLogsExports:
+        - postgresql
+        - upgrade
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-esg-navigator-db'
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # RDS Monitoring Role
+  RDSMonitoringRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-rds-monitoring-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: monitoring.rds.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole
+
+  # ElastiCache Redis Cluster
+  ElastiCacheCluster:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      ClusterName: !Sub '${EnvironmentName}-esg-redis'
+      Engine: redis
+      EngineVersion: '7.0'
+      CacheNodeType: !Ref CacheNodeType
+      NumCacheNodes: !Ref CacheNumNodes
+      CacheSubnetGroupName:
+        Fn::ImportValue: !Sub '${EnvironmentName}-CacheSubnetGroup'
+      VpcSecurityGroupIds:
+        - Fn::ImportValue: !Sub '${EnvironmentName}-ElastiCacheSecurityGroupId'
+      PreferredMaintenanceWindow: 'sun:05:00-sun:06:00'
+      SnapshotRetentionLimit: 7
+      SnapshotWindow: '04:00-05:00'
+      AutoMinorVersionUpgrade: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-esg-redis'
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # Secrets Manager Secret for Database Credentials
+  DatabaseSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub '${EnvironmentName}/esg-navigator/database'
+      Description: Database credentials for ESG Navigator
+      SecretString: !Sub |
+        {
+          "username": "${DBUsername}",
+          "password": "${DBPassword}",
+          "host": "${RDSInstance.Endpoint.Address}",
+          "port": "${RDSInstance.Endpoint.Port}",
+          "dbname": "${DBName}",
+          "connection_string": "postgresql://${DBUsername}:${DBPassword}@${RDSInstance.Endpoint.Address}:${RDSInstance.Endpoint.Port}/${DBName}"
+        }
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-db-secret'
+
+Outputs:
+  RDSEndpoint:
+    Description: RDS PostgreSQL endpoint
+    Value: !GetAtt RDSInstance.Endpoint.Address
+    Export:
+      Name: !Sub '${EnvironmentName}-RDSEndpoint'
+
+  RDSPort:
+    Description: RDS PostgreSQL port
+    Value: !GetAtt RDSInstance.Endpoint.Port
+    Export:
+      Name: !Sub '${EnvironmentName}-RDSPort'
+
+  RDSInstanceId:
+    Description: RDS Instance Identifier
+    Value: !Ref RDSInstance
+    Export:
+      Name: !Sub '${EnvironmentName}-RDSInstanceId'
+
+  DatabaseURL:
+    Description: Database connection URL (retrieve password from Secrets Manager)
+    Value: !Sub 'postgresql://${DBUsername}:****@${RDSInstance.Endpoint.Address}:${RDSInstance.Endpoint.Port}/${DBName}'
+    Export:
+      Name: !Sub '${EnvironmentName}-DatabaseURL'
+
+  RedisEndpoint:
+    Description: ElastiCache Redis endpoint
+    Value: !GetAtt ElastiCacheCluster.RedisEndpoint.Address
+    Export:
+      Name: !Sub '${EnvironmentName}-RedisEndpoint'
+
+  RedisPort:
+    Description: ElastiCache Redis port
+    Value: !GetAtt ElastiCacheCluster.RedisEndpoint.Port
+    Export:
+      Name: !Sub '${EnvironmentName}-RedisPort'
+
+  RedisURL:
+    Description: Redis connection URL
+    Value: !Sub 'redis://${ElastiCacheCluster.RedisEndpoint.Address}:${ElastiCacheCluster.RedisEndpoint.Port}'
+    Export:
+      Name: !Sub '${EnvironmentName}-RedisURL'
+
+  DatabaseSecretArn:
+    Description: ARN of the database credentials secret
+    Value: !Ref DatabaseSecret
+    Export:
+      Name: !Sub '${EnvironmentName}-DatabaseSecretArn'

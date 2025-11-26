@@ -1,0 +1,447 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'ESG Navigator - ECS Cluster and Services'
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: production
+    Description: Environment name for resource tagging
+
+  APIImageTag:
+    Type: String
+    Default: latest
+    Description: Docker image tag for API
+
+  WebImageTag:
+    Type: String
+    Default: latest
+    Description: Docker image tag for Web
+
+  APICpu:
+    Type: Number
+    Default: 512
+    AllowedValues: [256, 512, 1024, 2048, 4096]
+    Description: CPU units for API task
+
+  APIMemory:
+    Type: Number
+    Default: 1024
+    AllowedValues: [512, 1024, 2048, 4096, 8192]
+    Description: Memory (MB) for API task
+
+  WebCpu:
+    Type: Number
+    Default: 256
+    AllowedValues: [256, 512, 1024, 2048, 4096]
+    Description: CPU units for Web task
+
+  WebMemory:
+    Type: Number
+    Default: 512
+    AllowedValues: [512, 1024, 2048, 4096, 8192]
+    Description: Memory (MB) for Web task
+
+  APIDesiredCount:
+    Type: Number
+    Default: 2
+    MinValue: 1
+    MaxValue: 10
+    Description: Desired number of API tasks
+
+  WebDesiredCount:
+    Type: Number
+    Default: 2
+    MinValue: 1
+    MaxValue: 10
+    Description: Desired number of Web tasks
+
+  JWTSecret:
+    Type: String
+    NoEcho: true
+    Description: JWT Secret for authentication
+
+  AnthropicApiKey:
+    Type: String
+    NoEcho: true
+    Description: Anthropic API Key for Claude
+
+  FrontendURL:
+    Type: String
+    Default: https://www.esgnavigator.ai
+    Description: Frontend URL
+
+Resources:
+  # ECS Cluster
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub '${EnvironmentName}-esg-navigator-cluster'
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+      CapacityProviders:
+        - FARGATE
+        - FARGATE_SPOT
+      DefaultCapacityProviderStrategy:
+        - CapacityProvider: FARGATE
+          Weight: 1
+          Base: 1
+        - CapacityProvider: FARGATE_SPOT
+          Weight: 4
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-esg-navigator-cluster'
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  # CloudWatch Log Groups
+  APILogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/ecs/${EnvironmentName}/esg-navigator-api'
+      RetentionInDays: 30
+
+  WebLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/ecs/${EnvironmentName}/esg-navigator-web'
+      RetentionInDays: 30
+
+  # ECS Task Execution Role
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-ecs-task-execution-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Policies:
+        - PolicyName: SecretsAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource:
+                  - Fn::ImportValue: !Sub '${EnvironmentName}-DatabaseSecretArn'
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameters
+                  - ssm:GetParameter
+                Resource:
+                  - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${EnvironmentName}/esg-navigator/*'
+
+  # ECS Task Role
+  ECSTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${EnvironmentName}-ecs-task-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: TaskPermissions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource:
+                  - !Sub 'arn:aws:s3:::${EnvironmentName}-esg-navigator-*/*'
+
+  # API Task Definition
+  APITaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub '${EnvironmentName}-esg-navigator-api'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: !Ref APICpu
+      Memory: !Ref APIMemory
+      ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
+      TaskRoleArn: !GetAtt ECSTaskRole.Arn
+      ContainerDefinitions:
+        - Name: api
+          Image: !Sub
+            - '${RepoUri}:${Tag}'
+            - RepoUri:
+                Fn::ImportValue: !Sub '${EnvironmentName}-APIRepositoryUri'
+              Tag: !Ref APIImageTag
+          Essential: true
+          PortMappings:
+            - ContainerPort: 8080
+              Protocol: tcp
+          Environment:
+            - Name: NODE_ENV
+              Value: production
+            - Name: PORT
+              Value: '8080'
+            - Name: REDIS_URL
+              Value: !Sub
+                - 'redis://${RedisEndpoint}:${RedisPort}'
+                - RedisEndpoint:
+                    Fn::ImportValue: !Sub '${EnvironmentName}-RedisEndpoint'
+                  RedisPort:
+                    Fn::ImportValue: !Sub '${EnvironmentName}-RedisPort'
+            - Name: FRONTEND_URL
+              Value: !Ref FrontendURL
+          Secrets:
+            - Name: DATABASE_URL
+              ValueFrom: !Sub
+                - '${SecretArn}:connection_string::'
+                - SecretArn:
+                    Fn::ImportValue: !Sub '${EnvironmentName}-DatabaseSecretArn'
+            - Name: JWT_SECRET
+              ValueFrom: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${EnvironmentName}/esg-navigator/jwt-secret'
+            - Name: ANTHROPIC_API_KEY
+              ValueFrom: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${EnvironmentName}/esg-navigator/anthropic-api-key'
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref APILogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: api
+          HealthCheck:
+            Command:
+              - CMD-SHELL
+              - 'curl -f http://localhost:8080/health || exit 1'
+            Interval: 30
+            Timeout: 5
+            Retries: 3
+            StartPeriod: 60
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-api-task'
+
+  # Web Task Definition
+  WebTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub '${EnvironmentName}-esg-navigator-web'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: !Ref WebCpu
+      Memory: !Ref WebMemory
+      ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
+      TaskRoleArn: !GetAtt ECSTaskRole.Arn
+      ContainerDefinitions:
+        - Name: web
+          Image: !Sub
+            - '${RepoUri}:${Tag}'
+            - RepoUri:
+                Fn::ImportValue: !Sub '${EnvironmentName}-WebRepositoryUri'
+              Tag: !Ref WebImageTag
+          Essential: true
+          PortMappings:
+            - ContainerPort: 3000
+              Protocol: tcp
+          Environment:
+            - Name: NODE_ENV
+              Value: production
+            - Name: NEXT_TELEMETRY_DISABLED
+              Value: '1'
+            - Name: NEXT_PUBLIC_API_URL
+              Value: !Ref FrontendURL
+            - Name: API_BACKEND_URL
+              Value: !Sub 'http://api.${EnvironmentName}.internal:8080'
+            - Name: NEXT_PUBLIC_WS_URL
+              Value: !Sub 'wss://www.esgnavigator.ai/realtime'
+            - Name: NEXT_PUBLIC_ENV
+              Value: production
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref WebLogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: web
+          HealthCheck:
+            Command:
+              - CMD-SHELL
+              - 'curl -f http://localhost:3000/ || exit 1'
+            Interval: 30
+            Timeout: 5
+            Retries: 3
+            StartPeriod: 60
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-web-task'
+
+  # API Service
+  APIService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - APITaskDefinition
+    Properties:
+      ServiceName: !Sub '${EnvironmentName}-api-service'
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref APITaskDefinition
+      DesiredCount: !Ref APIDesiredCount
+      LaunchType: FARGATE
+      PlatformVersion: LATEST
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - Fn::ImportValue: !Sub '${EnvironmentName}-ECSSecurityGroupId'
+          Subnets:
+            - Fn::ImportValue: !Sub '${EnvironmentName}-PrivateSubnet1'
+            - Fn::ImportValue: !Sub '${EnvironmentName}-PrivateSubnet2'
+      LoadBalancers:
+        - ContainerName: api
+          ContainerPort: 8080
+          TargetGroupArn:
+            Fn::ImportValue: !Sub '${EnvironmentName}-APITargetGroupArn'
+      HealthCheckGracePeriodSeconds: 120
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+        DeploymentCircuitBreaker:
+          Enable: true
+          Rollback: true
+      EnableExecuteCommand: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-api-service'
+
+  # Web Service
+  WebService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - WebTaskDefinition
+      - APIService
+    Properties:
+      ServiceName: !Sub '${EnvironmentName}-web-service'
+      Cluster: !Ref ECSCluster
+      TaskDefinition: !Ref WebTaskDefinition
+      DesiredCount: !Ref WebDesiredCount
+      LaunchType: FARGATE
+      PlatformVersion: LATEST
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+            - Fn::ImportValue: !Sub '${EnvironmentName}-ECSSecurityGroupId'
+          Subnets:
+            - Fn::ImportValue: !Sub '${EnvironmentName}-PrivateSubnet1'
+            - Fn::ImportValue: !Sub '${EnvironmentName}-PrivateSubnet2'
+      LoadBalancers:
+        - ContainerName: web
+          ContainerPort: 3000
+          TargetGroupArn:
+            Fn::ImportValue: !Sub '${EnvironmentName}-WebTargetGroupArn'
+      HealthCheckGracePeriodSeconds: 120
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+        DeploymentCircuitBreaker:
+          Enable: true
+          Rollback: true
+      EnableExecuteCommand: true
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-web-service'
+
+  # Auto Scaling for API Service
+  APIAutoScalingTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MaxCapacity: 10
+      MinCapacity: !Ref APIDesiredCount
+      ResourceId: !Sub 'service/${ECSCluster}/${APIService.Name}'
+      RoleARN: !Sub 'arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService'
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+
+  APIAutoScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Sub '${EnvironmentName}-api-scaling-policy'
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref APIAutoScalingTarget
+      TargetTrackingScalingPolicyConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageCPUUtilization
+        TargetValue: 70
+        ScaleInCooldown: 300
+        ScaleOutCooldown: 60
+
+  # Auto Scaling for Web Service
+  WebAutoScalingTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MaxCapacity: 10
+      MinCapacity: !Ref WebDesiredCount
+      ResourceId: !Sub 'service/${ECSCluster}/${WebService.Name}'
+      RoleARN: !Sub 'arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService'
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+
+  WebAutoScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Sub '${EnvironmentName}-web-scaling-policy'
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref WebAutoScalingTarget
+      TargetTrackingScalingPolicyConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageCPUUtilization
+        TargetValue: 70
+        ScaleInCooldown: 300
+        ScaleOutCooldown: 60
+
+Outputs:
+  ClusterName:
+    Description: ECS Cluster Name
+    Value: !Ref ECSCluster
+    Export:
+      Name: !Sub '${EnvironmentName}-ECSClusterName'
+
+  ClusterArn:
+    Description: ECS Cluster ARN
+    Value: !GetAtt ECSCluster.Arn
+    Export:
+      Name: !Sub '${EnvironmentName}-ECSClusterArn'
+
+  APIServiceName:
+    Description: API Service Name
+    Value: !GetAtt APIService.Name
+    Export:
+      Name: !Sub '${EnvironmentName}-APIServiceName'
+
+  WebServiceName:
+    Description: Web Service Name
+    Value: !GetAtt WebService.Name
+    Export:
+      Name: !Sub '${EnvironmentName}-WebServiceName'
+
+  APITaskDefinitionArn:
+    Description: API Task Definition ARN
+    Value: !Ref APITaskDefinition
+    Export:
+      Name: !Sub '${EnvironmentName}-APITaskDefinitionArn'
+
+  WebTaskDefinitionArn:
+    Description: Web Task Definition ARN
+    Value: !Ref WebTaskDefinition
+    Export:
+      Name: !Sub '${EnvironmentName}-WebTaskDefinitionArn'
