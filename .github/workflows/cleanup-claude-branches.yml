@@ -1,0 +1,61 @@
+name: Cleanup Claude Branches
+
+on:
+  # Run weekly on Sundays at 00:00 UTC
+  schedule:
+    - cron: '0 0 * * 0'
+
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (no deletions)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      keep_recent:
+        description: 'Number of recent branches to keep per feature'
+        required: false
+        default: '3'
+        type: string
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Fetch all branches
+        run: git fetch origin --prune
+
+      - name: Run cleanup script (dry-run)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'true'
+        run: |
+          bash scripts/cleanup-claude-branches.sh --dry-run --keep-recent ${{ github.event.inputs.keep_recent || '3' }}
+
+      - name: Run cleanup script (auto mode)
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run == 'false')
+        run: |
+          bash scripts/cleanup-claude-branches.sh --auto --keep-recent ${{ github.event.inputs.keep_recent || '3' }}
+
+      - name: Post cleanup summary
+        if: success()
+        run: |
+          echo "✅ Branch cleanup completed successfully!"
+          echo ""
+          echo "Remaining Claude branches:"
+          git branch -r | grep 'origin/claude/' | wc -l || echo "0"
