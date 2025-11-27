@@ -146,12 +146,20 @@ export default function AssessmentsPage() {
                 Evaluate your compliance across multiple frameworks and standards
               </p>
             </div>
-            <Link 
-              href="/"
-              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
-            >
-              ← Back to Home
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/admin/duplicates"
+                className="px-6 py-3 bg-indigo-100 text-indigo-700 rounded-lg font-medium hover:bg-indigo-200 transition-colors"
+              >
+                Admin Panel
+              </Link>
+              <Link
+                href="/"
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              >
+                ← Back to Home
+              </Link>
+            </div>
           </div>
         </div>
       </div>

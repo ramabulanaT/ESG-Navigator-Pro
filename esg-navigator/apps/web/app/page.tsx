@@ -22,8 +22,9 @@ export default function Home() {
             <a href="#features" className="hover:text-cyan-400 transition">Features</a>
             <a href="#capabilities" className="hover:text-cyan-400 transition">Capabilities</a>
             <a href="#contact" className="hover:text-cyan-400 transition">Contact</a>
+            <Link href="/admin/duplicates" className="hover:text-cyan-400 transition">Admin</Link>
           </div>
-          <Link 
+          <Link
             href="/assessments"
             className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition"
           >
