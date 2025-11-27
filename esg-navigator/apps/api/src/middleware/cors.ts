@@ -1,10 +1,9 @@
-﻿import type { Request } from "express";
-import cors, { CorsOptionsDelegate } from "cors";
+﻿import cors from "cors";
 import { ENV } from "../config/env";
 const allow = new Set(ENV.ALLOWED_ORIGINS);
 /** Why: strict allowlist in prod. */
-const opts: CorsOptionsDelegate = (req: Request, cb) => {
-  const origin = req.header("Origin") ?? "";
+const opts: cors.CorsOptionsDelegate<cors.CorsRequest> = (req, cb) => {
+  const origin = (req.headers?.origin as string) ?? "";
   const ok = ENV.NODE_ENV !== "production" ? true : allow.has(origin);
   cb(null, {
     origin: ok,
