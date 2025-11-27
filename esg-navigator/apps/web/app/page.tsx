@@ -57,16 +57,16 @@ export default function Home() {
             The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by Sibanye-Stillwater, Anglo American, and tier-1 enterprises. Powered by Anthropic Claude, AWS infrastructure, and IBM enterprise integration.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link 
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 justify-center mb-16">
+            <Link
               href="/assessments"
-              className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/50 transition inline-flex items-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/50 transition inline-flex items-center justify-center gap-2"
             >
               Start Assessment <ArrowRight className="w-5 h-5" />
             </Link>
             <button
               onClick={() => setIsConsultationOpen(true)}
-              className="px-8 py-4 border border-cyan-500 text-cyan-400 rounded-lg font-bold text-lg hover:bg-cyan-500/10 transition"
+              className="w-full sm:w-auto px-8 py-4 border border-cyan-500 text-cyan-400 rounded-lg font-bold text-lg hover:bg-cyan-500/10 transition"
             >
               Schedule Demo
             </button>
@@ -168,16 +168,16 @@ export default function Home() {
           <p className="text-xl text-gray-300 mb-12">
             Join leading mining companies and enterprises in automating compliance with AI
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 justify-center">
+            <Link
               href="/assessments"
-              className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/50 transition"
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-bold text-lg hover:shadow-lg hover:shadow-cyan-500/50 transition text-center"
             >
               Access Platform
             </Link>
             <button
               onClick={() => setIsConsultationOpen(true)}
-              className="px-8 py-4 border border-cyan-500 text-cyan-400 rounded-lg font-bold text-lg hover:bg-cyan-500/10 transition"
+              className="w-full sm:w-auto px-8 py-4 border border-cyan-500 text-cyan-400 rounded-lg font-bold text-lg hover:bg-cyan-500/10 transition"
             >
               Schedule Consultation
             </button>
@@ -188,14 +188,14 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-12 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center font-bold text-sm">
                 TIS
               </div>
               <span className="font-bold">TIS Holdings</span>
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 text-center sm:text-right">
               © 2025 TIS Holdings. All rights reserved. | ESG-GRC Automation Platform
             </div>
           </div>
