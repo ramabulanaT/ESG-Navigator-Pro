@@ -33,7 +33,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
-          © {new Date().getFullYear()} ESG Navigator. All rights reserved.
+          © {new Date().getFullYear()} TIS Holdings. All rights reserved.
         </div>
       </div>
     </footer>
