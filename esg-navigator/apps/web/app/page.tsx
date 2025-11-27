@@ -196,7 +196,7 @@ export default function Home() {
               <span className="font-bold">TIS Holdings</span>
             </div>
             <div className="text-sm text-gray-500 text-center sm:text-right">
-              Copyright (C) 2025 Cinnabar Investment Management. All rights reserved.
+              © 2025 TIS Holdings. All rights reserved. | ESG-GRC Automation Platform
             </div>
           </div>
         </div>
