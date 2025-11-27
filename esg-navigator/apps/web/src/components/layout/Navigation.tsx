@@ -1,16 +1,21 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, BookOpen, Home, Menu, X } from "lucide-react";
+import { BarChart3, BookOpen, Home, Menu, X, ClipboardCheck, Sparkles, Bot, Calendar } from "lucide-react";
 import { useState } from "react";
+import ConsultationModal from "../ConsultationModal";
 
 export default function Navigation() {
   const [open, setOpen] = useState(false);
+  const [showConsultation, setShowConsultation] = useState(false);
   const pathname = usePathname();
   const items = [
     { href: "/", label: "Home", icon: Home },
     { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
     { href: "/training", label: "Training", icon: BookOpen },
+    { href: "/assessments", label: "Assessments", icon: ClipboardCheck },
+    { href: "/agents", label: "AI Agents", icon: Bot },
+    { href: "/ai-insights", label: "Analytics", icon: Sparkles },
   ];
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -38,6 +43,13 @@ export default function Navigation() {
               );
             })}
           </div>
+          <button
+              onClick={() => setShowConsultation(true)}
+              className="hidden md:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:shadow-lg transition-all"
+            >
+              <Calendar size={18} />
+              <span>Schedule Consultation</span>
+            </button>
           <button className="md:hidden p-2" onClick={() => setOpen(!open)}>{open ? <X size={24} /> : <Menu size={24} />}</button>
         </div>
         {open && (
@@ -60,6 +72,7 @@ export default function Navigation() {
           </div>
         )}
       </div>
+      <ConsultationModal isOpen={showConsultation} onClose={() => setShowConsultation(false)} />
     </nav>
   );
 }
