@@ -64,7 +64,7 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
         message: ''
       })
     } catch (err) {
-      setError('Failed to submit. Please try again or email us directly at contact@tisholdings.com')
+      setError('Failed to submit. Please try again or email us directly at Terryr@tis-holdings.com')
     } finally {
       setIsSubmitting(false)
     }
