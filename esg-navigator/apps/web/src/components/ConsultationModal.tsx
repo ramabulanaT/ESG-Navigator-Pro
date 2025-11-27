@@ -14,6 +14,9 @@ interface FormData {
   company: string
   phone: string
   preferredDate: string
+  preferredTime: string
+  consultationType: string
+  companySize: string
   message: string
 }
 
@@ -24,13 +27,16 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
     company: '',
     phone: '',
     preferredDate: '',
+    preferredTime: '',
+    consultationType: '',
+    companySize: '',
     message: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState('')
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
     setError('')
@@ -61,6 +67,9 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
         company: '',
         phone: '',
         preferredDate: '',
+        preferredTime: '',
+        consultationType: '',
+        companySize: '',
         message: ''
       })
     } catch (err) {
@@ -202,21 +211,90 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
                 </div>
               </div>
 
-              {/* Preferred Date Field */}
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Preferred Date
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                  <input
-                    type="date"
-                    name="preferredDate"
-                    value={formData.preferredDate}
+              {/* Preferred Date and Time Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Preferred Date
+                  </label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                    <input
+                      type="date"
+                      name="preferredDate"
+                      value={formData.preferredDate}
+                      onChange={handleChange}
+                      min={new Date().toISOString().split('T')[0]}
+                      className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Preferred Time
+                  </label>
+                  <select
+                    name="preferredTime"
+                    value={formData.preferredTime}
                     onChange={handleChange}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition"
-                  />
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500 transition"
+                  >
+                    <option value="" className="bg-gray-900">Select time</option>
+                    <option value="09:00" className="bg-gray-900">09:00 AM</option>
+                    <option value="10:00" className="bg-gray-900">10:00 AM</option>
+                    <option value="11:00" className="bg-gray-900">11:00 AM</option>
+                    <option value="12:00" className="bg-gray-900">12:00 PM</option>
+                    <option value="13:00" className="bg-gray-900">01:00 PM</option>
+                    <option value="14:00" className="bg-gray-900">02:00 PM</option>
+                    <option value="15:00" className="bg-gray-900">03:00 PM</option>
+                    <option value="16:00" className="bg-gray-900">04:00 PM</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Consultation Type and Company Size Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Consultation Type *
+                  </label>
+                  <select
+                    name="consultationType"
+                    value={formData.consultationType}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500 transition"
+                  >
+                    <option value="" className="bg-gray-900">Select type</option>
+                    <option value="esg-strategy" className="bg-gray-900">ESG Strategy Development</option>
+                    <option value="compliance-audit" className="bg-gray-900">Compliance Audit</option>
+                    <option value="supplier-assessment" className="bg-gray-900">Supplier Assessment</option>
+                    <option value="carbon-reduction" className="bg-gray-900">Carbon Reduction Planning</option>
+                    <option value="reporting" className="bg-gray-900">ESG Reporting & Disclosure</option>
+                    <option value="training" className="bg-gray-900">Training & Capacity Building</option>
+                    <option value="other" className="bg-gray-900">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Company Size *
+                  </label>
+                  <select
+                    name="companySize"
+                    value={formData.companySize}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500 transition"
+                  >
+                    <option value="" className="bg-gray-900">Select size</option>
+                    <option value="1-50" className="bg-gray-900">1-50 employees</option>
+                    <option value="51-200" className="bg-gray-900">51-200 employees</option>
+                    <option value="201-500" className="bg-gray-900">201-500 employees</option>
+                    <option value="501-1000" className="bg-gray-900">501-1,000 employees</option>
+                    <option value="1000+" className="bg-gray-900">1,000+ employees</option>
+                  </select>
                 </div>
               </div>
 
