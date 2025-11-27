@@ -14,9 +14,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center font-bold">
-              TIS
+              EN
             </div>
-            <span className="font-bold text-xl">TIS Holdings</span>
+            <span className="font-bold text-xl">ESG Navigator</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="hover:text-cyan-400 transition">Features</a>
@@ -54,7 +54,7 @@ export default function Home() {
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-            The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by Sibanye-Stillwater, Anglo American, and tier-1 enterprises. Powered by Anthropic Claude, AWS infrastructure, and IBM enterprise integration.
+            The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by tier-1 enterprises worldwide with enterprise-grade AI and cloud infrastructure.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -98,7 +98,7 @@ export default function Home() {
       <section id="features" className="py-24 bg-gradient-to-b from-black to-blue-950/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-4">Why Choose TIS Holdings?</h2>
+            <h2 className="text-5xl font-bold mb-4">Why Choose ESG Navigator?</h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               The first comprehensive compliance automation system with AI-driven capabilities
             </p>
@@ -109,12 +109,12 @@ export default function Home() {
               {
                 icon: <Lightbulb className="w-8 h-8" />,
                 title: "AI-Powered Intelligence",
-                description: "Claude AI provides real-time compliance recommendations, gap analysis, and predictive insights across all ESG frameworks."
+                description: "Advanced AI provides real-time compliance recommendations, gap analysis, and predictive insights across all ESG frameworks."
               },
               {
                 icon: <Shield className="w-8 h-8" />,
                 title: "Enterprise Security",
-                description: "ISO 27001 compliance, AWS enterprise infrastructure, and bank-grade encryption for all sensitive data."
+                description: "ISO 27001 compliance, enterprise cloud infrastructure, and bank-grade encryption for all sensitive data."
               },
               {
                 icon: <Zap className="w-8 h-8" />,
@@ -152,7 +152,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-16">Trusted by Industry Leaders</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-center">
-            {['Anthropic', 'AWS', 'IBM', 'DRATA'].map((partner) => (
+            {['Enterprise AI', 'Cloud Infrastructure', 'Security Compliance', 'Data Analytics'].map((partner) => (
               <div key={partner} className="bg-white/5 border border-white/10 rounded-lg p-8">
                 <div className="font-bold text-lg text-cyan-400">{partner}</div>
               </div>
@@ -191,12 +191,12 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center font-bold text-sm">
-                TIS
+                EN
               </div>
-              <span className="font-bold">TIS Holdings</span>
+              <span className="font-bold">ESG Navigator</span>
             </div>
             <div className="text-sm text-gray-500">
-              © 2025 TIS Holdings. All rights reserved. | ESG-GRC Automation Platform
+              © 2025 ESG Navigator. All rights reserved. | ESG-GRC Automation Platform
             </div>
           </div>
         </div>

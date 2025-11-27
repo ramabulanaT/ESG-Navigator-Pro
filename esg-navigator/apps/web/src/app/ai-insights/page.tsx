@@ -75,7 +75,7 @@ export default function AIInsightsPage() {
                 AI-powered analysis and recommendations for your ESG performance
               </p>
               <p className="text-purple-200 text-sm mt-2">
-                Powered by Anthropic Claude & IBM Watsonx
+                Powered by Advanced AI & Enterprise Analytics
               </p>
             </div>
             <Link 
@@ -150,7 +150,7 @@ export default function AIInsightsPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900">AI Analysis</h3>
-                      <p className="text-sm text-gray-600">Anthropic Claude</p>
+                      <p className="text-sm text-gray-600">Advanced AI Assistant</p>
                     </div>
                   </div>
                   <div className="prose prose-sm max-w-none">
@@ -253,8 +253,8 @@ export default function AIInsightsPage() {
                     <Sparkles className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="font-semibold">Anthropic Claude</p>
-                    <p className="text-sm text-purple-200">Advanced Language Model</p>
+                    <p className="font-semibold">Advanced AI</p>
+                    <p className="text-sm text-purple-200">Next-Generation Language Model</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -262,8 +262,8 @@ export default function AIInsightsPage() {
                     <span className="text-xl">🤖</span>
                   </div>
                   <div>
-                    <p className="font-semibold">IBM Watsonx</p>
-                    <p className="text-sm text-purple-200">Enterprise AI Platform</p>
+                    <p className="font-semibold">Enterprise Analytics</p>
+                    <p className="text-sm text-purple-200">Intelligent Data Platform</p>
                   </div>
                 </div>
               </div>

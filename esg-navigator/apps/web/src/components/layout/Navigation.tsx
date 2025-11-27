@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, BookOpen, Home, Menu, X } from "lucide-react";
+import { BarChart3, BookOpen, Home, Menu, X, FileCheck, Sparkles, Bot } from "lucide-react";
 import { useState } from "react";
 
 export default function Navigation() {
@@ -10,6 +10,9 @@ export default function Navigation() {
   const items = [
     { href: "/", label: "Home", icon: Home },
     { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
+    { href: "/assessments", label: "Assessments", icon: FileCheck },
+    { href: "/ai-insights", label: "AI Insights", icon: Sparkles },
+    { href: "/ai-agents", label: "AI Agents", icon: Bot },
     { href: "/training", label: "Training", icon: BookOpen },
   ];
   return (

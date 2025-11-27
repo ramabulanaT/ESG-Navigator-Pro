@@ -16,7 +16,7 @@ export default function Home() {
       <div className="relative z-10 flex items-center justify-center min-h-screen">
         <div className="text-center px-4">
           <h1 className="text-6xl font-bold text-white mb-4 drop-shadow-lg">
-            TIS-IntelliMat ESG Navigator
+            ESG Navigator Pro
           </h1>
           <p className="text-2xl text-white mb-8 drop-shadow-lg">
             Real-time compliance, energy intelligence, and sustainability monitoring unified.
