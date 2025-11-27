@@ -54,7 +54,7 @@ export default function Home() {
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-            The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by Sibanye-Stillwater, Anglo American, and tier-1 enterprises. Powered by Anthropic Claude, AWS infrastructure, and IBM enterprise integration.
+            The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by enterprise organizations across multiple sectors. Powered by advanced AI, enterprise-grade cloud infrastructure, and institutional integrations.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -109,12 +109,12 @@ export default function Home() {
               {
                 icon: <Lightbulb className="w-8 h-8" />,
                 title: "AI-Powered Intelligence",
-                description: "Claude AI provides real-time compliance recommendations, gap analysis, and predictive insights across all ESG frameworks."
+                description: "Advanced AI provides real-time compliance recommendations, gap analysis, and predictive insights across all ESG frameworks."
               },
               {
                 icon: <Shield className="w-8 h-8" />,
                 title: "Enterprise Security",
-                description: "ISO 27001 compliance, AWS enterprise infrastructure, and bank-grade encryption for all sensitive data."
+                description: "ISO 27001 compliance, enterprise-grade cloud infrastructure, and bank-grade encryption for all sensitive data."
               },
               {
                 icon: <Zap className="w-8 h-8" />,
@@ -152,9 +152,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-16">Trusted by Industry Leaders</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-center">
-            {['Anthropic', 'AWS', 'IBM', 'DRATA'].map((partner) => (
-              <div key={partner} className="bg-white/5 border border-white/10 rounded-lg p-8">
-                <div className="font-bold text-lg text-cyan-400">{partner}</div>
+            {['Advanced AI', 'Cloud Infrastructure', 'Enterprise Integration', 'Compliance Automation'].map((capability) => (
+              <div key={capability} className="bg-white/5 border border-white/10 rounded-lg p-8">
+                <div className="font-bold text-lg text-cyan-400">{capability}</div>
               </div>
             ))}
           </div>
@@ -166,7 +166,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your ESG Compliance?</h2>
           <p className="text-xl text-gray-300 mb-12">
-            Join leading mining companies and enterprises in automating compliance with AI
+            Join organizations worldwide in automating compliance with AI-powered ESG-GRC automation
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 

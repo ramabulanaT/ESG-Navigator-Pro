@@ -38,7 +38,7 @@ const defaultConfig: LandingPageConfig = {
   hero: {
     badge: 'AI-Powered ESG-GRC Automation',
     heading: 'Enterprise Compliance, Automated by AI',
-    description: "The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by Sibanye-Stillwater, Anglo American, and tier-1 enterprises. Powered by Anthropic Claude, AWS infrastructure, and IBM enterprise integration.",
+    description: "The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by enterprise organizations across multiple sectors. Powered by advanced AI, enterprise-grade cloud infrastructure, and institutional integrations.",
     ctaButtons: {
       primary: { text: 'Start Assessment', href: '/assessments' },
       secondary: { text: 'Schedule Demo', action: 'open-consultation' }
@@ -54,12 +54,12 @@ const defaultConfig: LandingPageConfig = {
     {
       icon: 'Lightbulb',
       title: 'AI-Powered Intelligence',
-      description: 'Claude AI provides real-time compliance recommendations, gap analysis, and predictive insights across all ESG frameworks.'
+      description: 'Advanced AI provides real-time compliance recommendations, gap analysis, and predictive insights across all ESG frameworks.'
     },
     {
       icon: 'Shield',
       title: 'Enterprise Security',
-      description: 'ISO 27001 compliance, AWS enterprise infrastructure, and bank-grade encryption for all sensitive data.'
+      description: 'ISO 27001 compliance, enterprise-grade cloud infrastructure, and bank-grade encryption for all sensitive data.'
     },
     {
       icon: 'Zap',
@@ -82,10 +82,10 @@ const defaultConfig: LandingPageConfig = {
       description: 'ISO 50001, ISO 14001, ISO 45001, ISO 27001, GISTM, and JSE compliance in one integrated platform.'
     }
   ],
-  partnerships: ['Anthropic', 'AWS', 'IBM', 'DRATA'],
+  partnerships: ['Advanced AI', 'Cloud Infrastructure', 'Enterprise Integration', 'Compliance Automation'],
   cta: {
     heading: 'Ready to Transform Your ESG Compliance?',
-    description: 'Join leading mining companies and enterprises in automating compliance with AI',
+    description: 'Join organizations worldwide in automating compliance with AI-powered ESG-GRC automation',
     buttons: {
       primary: { text: 'Access Platform', href: '/assessments' },
       secondary: { text: 'Schedule Consultation', action: 'open-consultation' }
