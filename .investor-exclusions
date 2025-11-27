@@ -1,0 +1,62 @@
+# INVESTOR EXCLUSION LIST - QUICK REFERENCE
+
+## DO NOT SHARE WITH INVESTORS
+
+### File Types
+*.ps1                    # PowerShell deployment scripts
+docker-compose*.yml      # Infrastructure configs
+*.backup-*               # Backup files
+deploy-*.sh              # Deployment automation
+**/scripts/deploy-*      # Deployment scripts
+**/scripts/fix-*         # Fix scripts
+**/scripts/verify-*      # Verification scripts
+
+### Directories
+/infrastructure/         # All infrastructure configs
+/scripts/                # Deployment & automation scripts
+/.github/workflows/      # CI/CD automation (unless product-relevant)
+
+### Branch Patterns
+fix/*
+deploy/*
+infrastructure/*
+config/*
+cleanup/*
+scripts/*
+temp/*
+debug/*
+hotfix/*                 # Unless approved for customer communication
+
+### Specific Files
+- esg-navigator/deploy-production.ps1
+- esg-navigator/fix-complete.ps1
+- esg-navigator/scripts/deploy-verify.ps1
+- esg-navigator/scripts/next-fix-conflicts.ps1
+- esg-navigator/scripts/verify-after-deploy.ps1
+- esg-navigator/scripts/fix-next-build.ps1
+- TIS-Platform/docker-compose.backup-*.yml
+
+## SAFE TO SHARE WITH INVESTORS
+
+### Feature Work
+feature/*
+enhancement/*
+product/*
+ui/*
+ux/*
+
+### Documentation
+docs/*
+README.md (product sections)
+MARKETPLACE_PRICING.md
+User guides
+Product roadmaps
+
+### Release Content
+release/*
+version/*
+changelog (product features only)
+
+---
+
+For full guidelines, see: BRANCH_MANAGEMENT.md
