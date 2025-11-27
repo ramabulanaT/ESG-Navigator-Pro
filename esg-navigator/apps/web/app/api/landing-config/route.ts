@@ -19,6 +19,17 @@ export interface LandingPageConfig {
     title: string
     description: string
   }>
+  agents: Array<{
+    icon: string
+    title: string
+    description: string
+  }>
+  integrations: Array<{
+    icon: string
+    title: string
+    description: string
+    capabilities: string[]
+  }>
   partnerships: string[]
   cta: {
     heading: string
@@ -73,13 +84,54 @@ const defaultConfig: LandingPageConfig = {
     },
     {
       icon: 'Users',
-      title: 'Expert Training',
-      description: '8-Domain Compliance Stewardship Model (CSM) with structured coaching framework and certification programs.'
+      title: 'Expert Training & Certification',
+      description: 'Comprehensive 8-Domain Compliance Stewardship Model (CSM) with structured coaching, hands-on workshops, and industry-recognized certification programs aligned to ESG-GRC best practices.'
     },
     {
       icon: 'Lock',
       title: 'Framework Coverage',
       description: 'ISO 50001, ISO 14001, ISO 45001, ISO 27001, GISTM, and JSE compliance in one integrated platform.'
+    }
+  ],
+  agents: [
+    {
+      icon: 'Brain',
+      title: 'Gap Analysis Agent',
+      description: 'Automatically identifies compliance gaps across your ESG-GRC framework, prioritizes risks, and recommends remediation strategies with ROI projections.'
+    },
+    {
+      icon: 'BarChart3',
+      title: 'Reporting & Analytics Agent',
+      description: 'Generates comprehensive compliance reports, KPI dashboards, and predictive analytics for stakeholder communication and board-level insights.'
+    },
+    {
+      icon: 'Cpu',
+      title: 'Orchestration Agent',
+      description: 'Manages workflow automation, task scheduling, and cross-system integrations with Watson Orchestrate and Envizi for seamless data synchronization.'
+    }
+  ],
+  integrations: [
+    {
+      icon: 'Network',
+      title: 'Watson Orchestrate Integration',
+      description: 'Automate end-to-end compliance processes with IBM Watson Orchestrate. Connect assessments, remediation tasks, and approval workflows across your enterprise systems.',
+      capabilities: [
+        'Workflow automation and RPA',
+        'Task routing and escalation',
+        'Cross-system data orchestration',
+        'Real-time process monitoring'
+      ]
+    },
+    {
+      icon: 'Zap',
+      title: 'Envizi Integration',
+      description: 'Unified ESG data management with IBM Envizi. Streamline data collection, validation, and reporting for comprehensive sustainability performance tracking.',
+      capabilities: [
+        'Real-time ESG data synchronization',
+        'Automated data validation & cleansing',
+        'Scope 1, 2, 3 emissions tracking',
+        'Integrated GHG accounting'
+      ]
     }
   ],
   partnerships: ['Advanced AI', 'Cloud Infrastructure', 'Enterprise Integration', 'Compliance Automation'],

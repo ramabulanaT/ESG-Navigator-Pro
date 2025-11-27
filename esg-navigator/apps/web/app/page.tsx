@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Shield, Zap, BarChart3, Users, Lock, Lightbulb } from 'lucide-react'
+import { ArrowRight, Shield, Zap, BarChart3, Users, Lock, Lightbulb, Brain, Cpu, Network } from 'lucide-react'
 import ConsultationModal from '@/components/ConsultationModal'
 
 export default function Home() {
@@ -128,8 +128,8 @@ export default function Home() {
               },
               {
                 icon: <Users className="w-8 h-8" />,
-                title: "Expert Training",
-                description: "8-Domain Compliance Stewardship Model (CSM) with structured coaching framework and certification programs."
+                title: "Expert Training & Certification",
+                description: "Comprehensive 8-Domain Compliance Stewardship Model (CSM) with structured coaching, hands-on workshops, and industry-recognized certification programs aligned to ESG-GRC best practices."
               },
               {
                 icon: <Lock className="w-8 h-8" />,
@@ -141,6 +141,102 @@ export default function Home() {
                 <div className="text-cyan-400 mb-4 flex justify-start">{feature.icon}</div>
                 <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
                 <p className="text-gray-400 flex-grow">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Agents Section */}
+      <section className="py-24 bg-gradient-to-b from-black to-purple-950/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold mb-4">Intelligent Agents</h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Purpose-built AI agents that automate compliance workflows and deliver insights at scale
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Brain className="w-8 h-8" />,
+                title: "Gap Analysis Agent",
+                description: "Automatically identifies compliance gaps across your ESG-GRC framework, prioritizes risks, and recommends remediation strategies with ROI projections."
+              },
+              {
+                icon: <BarChart3 className="w-8 h-8" />,
+                title: "Reporting & Analytics Agent",
+                description: "Generates comprehensive compliance reports, KPI dashboards, and predictive analytics for stakeholder communication and board-level insights."
+              },
+              {
+                icon: <Cpu className="w-8 h-8" />,
+                title: "Orchestration Agent",
+                description: "Manages workflow automation, task scheduling, and cross-system integrations with Watson Orchestrate and Envizi for seamless data synchronization."
+              }
+            ].map((agent, i) => (
+              <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-8 hover:bg-white/10 transition flex flex-col h-full">
+                <div className="text-purple-400 mb-4 flex justify-start">{agent.icon}</div>
+                <h3 className="text-xl font-bold mb-3">{agent.title}</h3>
+                <p className="text-gray-400 flex-grow">{agent.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Integrations Section */}
+      <section id="capabilities" className="py-24 bg-gradient-to-b from-black to-blue-950/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold mb-4">Enterprise API Integrations</h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Seamless connectivity with industry-leading ESG and sustainability platforms
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              {
+                icon: <Network className="w-10 h-10" />,
+                title: "Watson Orchestrate Integration",
+                description: "Automate end-to-end compliance processes with IBM Watson Orchestrate. Connect assessments, remediation tasks, and approval workflows across your enterprise systems.",
+                capabilities: [
+                  "Workflow automation and RPA",
+                  "Task routing and escalation",
+                  "Cross-system data orchestration",
+                  "Real-time process monitoring"
+                ]
+              },
+              {
+                icon: <Zap className="w-10 h-10" />,
+                title: "Envizi Integration",
+                description: "Unified ESG data management with IBM Envizi. Streamline data collection, validation, and reporting for comprehensive sustainability performance tracking.",
+                capabilities: [
+                  "Real-time ESG data synchronization",
+                  "Automated data validation & cleansing",
+                  "Scope 1, 2, 3 emissions tracking",
+                  "Integrated GHG accounting"
+                ]
+              }
+            ].map((integration, i) => (
+              <div key={i} className="bg-white/5 border border-cyan-500/30 rounded-xl p-8 hover:bg-white/10 transition">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="text-cyan-400">{integration.icon}</div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold mb-2">{integration.title}</h3>
+                  </div>
+                </div>
+                <p className="text-gray-400 mb-6">{integration.description}</p>
+                <div className="space-y-2">
+                  <div className="text-sm font-semibold text-cyan-400 mb-3">Key Capabilities</div>
+                  {integration.capabilities.map((cap, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-sm text-gray-300">
+                      <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></div>
+                      {cap}
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
