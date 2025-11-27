@@ -73,22 +73,22 @@ export default function Home() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20">
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
-              <div className="text-3xl font-bold text-cyan-400">R331M+</div>
-              <div className="text-sm text-gray-400 mt-2">Supply Chain Value</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-20">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur text-center">
+              <div className="text-3xl md:text-4xl font-bold text-cyan-400">R331M+</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-2">Supply Chain Value</div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
-              <div className="text-3xl font-bold text-cyan-400">87.2%</div>
-              <div className="text-sm text-gray-400 mt-2">Compliance Rate</div>
+            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur text-center">
+              <div className="text-3xl md:text-4xl font-bold text-cyan-400">87.2%</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-2">Compliance Rate</div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
-              <div className="text-3xl font-bold text-cyan-400">142+</div>
-              <div className="text-sm text-gray-400 mt-2">Assessment Questions</div>
+            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur text-center">
+              <div className="text-3xl md:text-4xl font-bold text-cyan-400">142+</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-2">Assessment Questions</div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
-              <div className="text-3xl font-bold text-cyan-400">6</div>
-              <div className="text-sm text-gray-400 mt-2">Integrated Frameworks</div>
+            <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur text-center">
+              <div className="text-3xl md:text-4xl font-bold text-cyan-400">6</div>
+              <div className="text-xs md:text-sm text-gray-400 mt-2">Integrated Frameworks</div>
             </div>
           </div>
         </div>
@@ -137,10 +137,10 @@ export default function Home() {
                 description: "ISO 50001, ISO 14001, ISO 45001, ISO 27001, GISTM, and JSE compliance in one integrated platform."
               }
             ].map((feature, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-8 hover:bg-white/10 transition">
-                <div className="text-cyan-400 mb-4">{feature.icon}</div>
+              <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-8 hover:bg-white/10 transition flex flex-col h-full">
+                <div className="text-cyan-400 mb-4 flex justify-start">{feature.icon}</div>
                 <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                <p className="text-gray-400">{feature.description}</p>
+                <p className="text-gray-400 flex-grow">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -188,14 +188,14 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-12 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center font-bold text-sm">
                 TIS
               </div>
               <span className="font-bold">TIS Holdings</span>
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-xs sm:text-sm text-gray-500 text-center sm:text-right">
               © 2025 TIS Holdings. All rights reserved. | ESG-GRC Automation Platform
             </div>
           </div>
