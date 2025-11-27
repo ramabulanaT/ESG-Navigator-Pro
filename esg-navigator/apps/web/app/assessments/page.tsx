@@ -135,20 +135,25 @@ export default function AssessmentsPage() {
       : 0
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900">ESG Assessments</h1>
-              <p className="text-gray-600 mt-2 text-lg">
-                Evaluate your compliance across multiple frameworks and standards
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-xl flex items-center justify-center font-bold shadow-lg shadow-cyan-500/30">
+                ESG
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">ESG Compliance Assessments</h1>
+                <p className="text-gray-600 mt-1 text-sm">
+                  AI-powered enterprise compliance evaluation across global frameworks
+                </p>
+              </div>
             </div>
-            <Link 
+            <Link
               href="/"
-              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-50 text-gray-700 rounded-lg font-medium hover:from-gray-200 hover:to-gray-100 transition-all border border-gray-200"
             >
               ← Back to Home
             </Link>
@@ -160,49 +165,49 @@ export default function AssessmentsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg hover:border-indigo-300 transition-all group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 font-medium">Total Assessments</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{totalAssessments}</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mt-1">{totalAssessments}</p>
               </div>
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FileCheck className="w-6 h-6 text-indigo-600" />
               </div>
             </div>
           </div>
-  
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg hover:border-green-300 transition-all group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 font-medium">Completed</p>
                 <p className="text-3xl font-bold text-green-600 mt-1">{completedCount}</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
             </div>
           </div>
-  
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 font-medium">In Progress</p>
                 <p className="text-3xl font-bold text-blue-600 mt-1">{inProgressCount}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Clock className="w-6 h-6 text-blue-600" />
               </div>
             </div>
           </div>
-  
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg hover:border-purple-300 transition-all group">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 font-medium">Avg. Score</p>
-                <p className="text-3xl font-bold text-indigo-600 mt-1">{avgScore}%</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mt-1">{avgScore}%</p>
               </div>
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span className="text-2xl">📊</span>
               </div>
             </div>
@@ -215,21 +220,21 @@ export default function AssessmentsPage() {
             const Icon = assessment.IconComponent
             const isSelected = selectedAssessment === assessment.id
             return (
-              <div 
-                key={assessment.id} 
-                className={`bg-white rounded-xl shadow-sm border border-gray-200 p-8 hover:shadow-lg transition-all duration-300 cursor-pointer ${
-                  isSelected ? 'ring-2 ring-indigo-500' : ''
+              <div
+                key={assessment.id}
+                className={`bg-white/80 backdrop-blur-sm rounded-2xl shadow-md border p-8 hover:shadow-xl transition-all duration-300 cursor-pointer ${
+                  isSelected ? 'ring-2 ring-indigo-500 border-indigo-300' : 'border-gray-200 hover:border-indigo-200'
                 }`}
                 onClick={() => setSelectedAssessment(assessment.id)}
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-3xl shadow-lg">
+                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-600 rounded-xl flex items-center justify-center text-3xl shadow-lg hover:scale-110 transition-transform">
                       {assessment.icon}
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-900">{assessment.title}</h3>
+                      <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">{assessment.title}</h3>
                       <p className="text-gray-600 font-medium">{assessment.subtitle}</p>
                     </div>
                   </div>

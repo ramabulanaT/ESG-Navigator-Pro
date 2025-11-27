@@ -64,7 +64,7 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
         message: ''
       })
     } catch (err) {
-      setError('Failed to submit. Please try again or email us directly at contact@tisholdings.com')
+      setError('Failed to submit. Please try again or email us directly at enterprise@esgnavigator.pro')
     } finally {
       setIsSubmitting(false)
     }
@@ -89,14 +89,14 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
       {/* Modal */}
       <div className="relative bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-700">
+        <div className="flex items-center justify-between p-6 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/30">
+              <Calendar className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">Schedule Consultation</h2>
-              <p className="text-sm text-gray-400">Connect with our ESG experts</p>
+              <h2 className="text-xl font-bold text-white">Book Enterprise Demo</h2>
+              <p className="text-sm text-gray-400">Connect with our ESG-GRC solution experts</p>
             </div>
           </div>
           <button
@@ -111,16 +111,16 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
         <div className="p-6">
           {isSubmitted ? (
             <div className="text-center py-8">
-              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-green-400" />
+              <div className="w-20 h-20 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-green-500/30">
+                <CheckCircle className="w-10 h-10 text-green-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Thank You!</h3>
-              <p className="text-gray-400 mb-6">
-                Your consultation request has been received. Our team will contact you within 24 hours to confirm your appointment.
+              <h3 className="text-2xl font-bold text-white mb-2">Request Received!</h3>
+              <p className="text-gray-400 mb-6 leading-relaxed">
+                Thank you for your interest in ESG Navigator Pro. Our enterprise solutions team will contact you within 24 hours to schedule your personalized demo and discuss your compliance needs.
               </p>
               <button
                 onClick={handleClose}
-                className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition"
+                className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/50 transition transform hover:scale-105"
               >
                 Close
               </button>
@@ -265,7 +265,7 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
               </button>
 
               <p className="text-xs text-gray-500 text-center">
-                By submitting, you agree to be contacted by TIS Holdings regarding your ESG compliance needs.
+                By submitting, you agree to be contacted by ESG Navigator Pro regarding your enterprise ESG-GRC needs. We respect your privacy and will never share your information.
               </p>
             </form>
           )}
