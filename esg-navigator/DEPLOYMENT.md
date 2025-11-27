@@ -78,36 +78,314 @@ docker-compose logs -f
 
 ## Option 2: AWS ECS Deployment
 
-### 1. Setup AWS Infrastructure
+Complete production deployment using AWS ECS Fargate with Application Load Balancer and RDS PostgreSQL.
+
+### Prerequisites
+- AWS CLI installed and configured (`aws configure`)
+- Docker installed locally
+- AWS Account with appropriate permissions
+- Domain name (optional, for production)
+
+### Step 1: Set Environment Variables
+
 ```bash
-# Create ECR repositories
-aws ecr create-repository --repository-name esg-navigator-api
-aws ecr create-repository --repository-name esg-navigator-web
-
-# Create ECS cluster
-aws ecs create-cluster --cluster-name esg-navigator-cluster
-
-# Create RDS PostgreSQL instance
-aws rds create-db-instance \
-  --db-instance-identifier esg-navigator-db \
-  --db-instance-class db.t3.medium \
-  --engine postgres \
-  --master-username esgadmin \
-  --master-user-password YourSecurePassword \
-  --allocated-storage 20
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export AWS_REGION=us-east-1
+export PROJECT_NAME=esg-navigator
 ```
 
-### 2. Deploy
+### Step 2: Setup AWS Infrastructure
+
+Run the automated infrastructure setup script:
+
 ```bash
-chmod +x infrastructure/deploy-aws.sh
+chmod +x infrastructure/setup-aws-infrastructure.sh
+./infrastructure/setup-aws-infrastructure.sh
+```
+
+This creates:
+- ✅ VPC with public subnets across 2 availability zones
+- ✅ Internet Gateway and route tables
+- ✅ Security groups (ALB, ECS tasks, RDS)
+- ✅ ECR repositories for API and Web images
+- ✅ ECS Cluster (Fargate)
+- ✅ CloudWatch Log Groups
+- ✅ RDS subnet group
+
+**Manual Steps Required:**
+
+#### Create RDS Database
+```bash
+# Source the generated config
+source infrastructure/aws-config.env
+
+# Create RDS instance
+aws rds create-db-instance \
+  --db-instance-identifier ${PROJECT_NAME}-db \
+  --db-instance-class db.t3.micro \
+  --engine postgres \
+  --engine-version 15.4 \
+  --master-username esgadmin \
+  --master-user-password "YourSecurePassword123!" \
+  --allocated-storage 20 \
+  --db-subnet-group-name ${PROJECT_NAME}-db-subnet-group \
+  --vpc-security-group-ids ${RDS_SG_ID} \
+  --backup-retention-period 7 \
+  --publicly-accessible false \
+  --region ${AWS_REGION}
+
+# Wait for DB to be available (5-10 minutes)
+aws rds wait db-instance-available \
+  --db-instance-identifier ${PROJECT_NAME}-db \
+  --region ${AWS_REGION}
+
+# Get DB endpoint
+DB_ENDPOINT=$(aws rds describe-db-instances \
+  --db-instance-identifier ${PROJECT_NAME}-db \
+  --query 'DBInstances[0].Endpoint.Address' \
+  --output text \
+  --region ${AWS_REGION})
+
+echo "Database endpoint: $DB_ENDPOINT"
+```
+
+#### Store Secrets in AWS Secrets Manager
+```bash
+# Database URL
+aws secretsmanager create-secret \
+  --name esg-navigator/database-url \
+  --secret-string "postgresql://esgadmin:YourSecurePassword123!@${DB_ENDPOINT}:5432/esgnavigator" \
+  --region ${AWS_REGION}
+
+# Anthropic API Key
+aws secretsmanager create-secret \
+  --name esg-navigator/anthropic-api-key \
+  --secret-string "sk-ant-api03-your-actual-key-here" \
+  --region ${AWS_REGION}
+
+# JWT Secret
+aws secretsmanager create-secret \
+  --name esg-navigator/jwt-secret \
+  --secret-string "$(openssl rand -base64 32)" \
+  --region ${AWS_REGION}
+
+# API URL (for frontend)
+aws secretsmanager create-secret \
+  --name esg-navigator/api-url \
+  --secret-string "https://api.esgnavigator.ai" \
+  --region ${AWS_REGION}
+```
+
+#### Create Application Load Balancer
+```bash
+# Create ALB
+ALB_ARN=$(aws elbv2 create-load-balancer \
+  --name ${PROJECT_NAME}-alb \
+  --subnets ${SUBNET_IDS} \
+  --security-groups ${ALB_SG_ID} \
+  --region ${AWS_REGION} \
+  --query 'LoadBalancers[0].LoadBalancerArn' \
+  --output text)
+
+# Get ALB DNS name
+ALB_DNS=$(aws elbv2 describe-load-balancers \
+  --load-balancer-arns ${ALB_ARN} \
+  --query 'LoadBalancers[0].DNSName' \
+  --output text \
+  --region ${AWS_REGION})
+
+echo "ALB DNS: $ALB_DNS"
+
+# Create Target Group for API (port 8080)
+API_TG_ARN=$(aws elbv2 create-target-group \
+  --name ${PROJECT_NAME}-api-tg \
+  --protocol HTTP \
+  --port 8080 \
+  --vpc-id ${VPC_ID} \
+  --target-type ip \
+  --health-check-path /health \
+  --health-check-interval-seconds 30 \
+  --healthy-threshold-count 2 \
+  --unhealthy-threshold-count 3 \
+  --region ${AWS_REGION} \
+  --query 'TargetGroups[0].TargetGroupArn' \
+  --output text)
+
+# Create Target Group for Web (port 3000)
+WEB_TG_ARN=$(aws elbv2 create-target-group \
+  --name ${PROJECT_NAME}-web-tg \
+  --protocol HTTP \
+  --port 3000 \
+  --vpc-id ${VPC_ID} \
+  --target-type ip \
+  --health-check-path / \
+  --health-check-interval-seconds 30 \
+  --healthy-threshold-count 2 \
+  --unhealthy-threshold-count 3 \
+  --region ${AWS_REGION} \
+  --query 'TargetGroups[0].TargetGroupArn' \
+  --output text)
+
+# Create HTTP listener
+aws elbv2 create-listener \
+  --load-balancer-arn ${ALB_ARN} \
+  --protocol HTTP \
+  --port 80 \
+  --default-actions Type=forward,TargetGroupArn=${WEB_TG_ARN} \
+  --region ${AWS_REGION}
+
+# Add rule to forward /api/* to API target group
+LISTENER_ARN=$(aws elbv2 describe-listeners \
+  --load-balancer-arn ${ALB_ARN} \
+  --query 'Listeners[0].ListenerArn' \
+  --output text \
+  --region ${AWS_REGION})
+
+aws elbv2 create-rule \
+  --listener-arn ${LISTENER_ARN} \
+  --priority 1 \
+  --conditions Field=path-pattern,Values='/api/*' \
+  --actions Type=forward,TargetGroupArn=${API_TG_ARN} \
+  --region ${AWS_REGION}
+```
+
+### Step 3: Register Task Definitions
+
+Update the task definition files with your AWS Account ID:
+
+```bash
+# Update API task definition
+sed -i "s/{AWS_ACCOUNT_ID}/${AWS_ACCOUNT_ID}/g" infrastructure/ecs-task-definition-api.json
+
+# Update Web task definition
+sed -i "s/{AWS_ACCOUNT_ID}/${AWS_ACCOUNT_ID}/g" infrastructure/ecs-task-definition-web.json
+
+# Register task definitions
+aws ecs register-task-definition \
+  --cli-input-json file://infrastructure/ecs-task-definition-api.json \
+  --region ${AWS_REGION}
+
+aws ecs register-task-definition \
+  --cli-input-json file://infrastructure/ecs-task-definition-web.json \
+  --region ${AWS_REGION}
+```
+
+### Step 4: Create ECS Services
+
+```bash
+# Create API service
+aws ecs create-service \
+  --cluster ${PROJECT_NAME}-cluster \
+  --service-name ${PROJECT_NAME}-api-service \
+  --task-definition ${PROJECT_NAME}-api \
+  --desired-count 2 \
+  --launch-type FARGATE \
+  --network-configuration "awsvpcConfiguration={subnets=[${SUBNET_IDS}],securityGroups=[${ECS_SG_ID}],assignPublicIp=ENABLED}" \
+  --load-balancers targetGroupArn=${API_TG_ARN},containerName=esg-navigator-api,containerPort=8080 \
+  --health-check-grace-period-seconds 60 \
+  --region ${AWS_REGION}
+
+# Create Web service
+aws ecs create-service \
+  --cluster ${PROJECT_NAME}-cluster \
+  --service-name ${PROJECT_NAME}-web-service \
+  --task-definition ${PROJECT_NAME}-web \
+  --desired-count 2 \
+  --launch-type FARGATE \
+  --network-configuration "awsvpcConfiguration={subnets=[${SUBNET_IDS}],securityGroups=[${ECS_SG_ID}],assignPublicIp=ENABLED}" \
+  --load-balancers targetGroupArn=${WEB_TG_ARN},containerName=esg-navigator-web,containerPort=3000 \
+  --health-check-grace-period-seconds 60 \
+  --region ${AWS_REGION}
+```
+
+### Step 5: Deploy Application
+
+Build and push Docker images to ECR:
+
+```bash
+# Set environment variables
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export AWS_REGION=us-east-1
+
+# Run deployment script
 ./infrastructure/deploy-aws.sh
 ```
 
-### 3. Configure Load Balancer
-- Create Application Load Balancer
-- Add Target Groups for API (port 8080) and Web (port 3000)
-- Configure SSL certificate
-- Point www.esgnavigator.ai to ALB
+The script will:
+1. Build API and Web Docker images
+2. Authenticate with ECR
+3. Tag and push images to ECR
+4. Update ECS services with new images
+
+### Step 6: Verify Deployment
+
+Run the verification script:
+
+```bash
+# Set ALB DNS for endpoint testing
+export ALB_DNS_NAME=$(aws elbv2 describe-load-balancers \
+  --names ${PROJECT_NAME}-alb \
+  --query 'LoadBalancers[0].DNSName' \
+  --output text \
+  --region ${AWS_REGION})
+
+# Run verification
+./infrastructure/verify-aws.sh
+```
+
+This checks:
+- ✅ AWS credentials
+- ✅ ECR repositories and images
+- ✅ ECS cluster status
+- ✅ ECS services health
+- ✅ Task definitions
+- ✅ CloudWatch logs
+- ✅ Load balancer health
+- ✅ Target groups
+- ✅ VPC and networking
+- ✅ Endpoint health
+
+### Accessing the Application
+
+- Frontend: `http://${ALB_DNS}` or `https://www.esgnavigator.ai`
+- API: `http://${ALB_DNS}/api/health` or `https://www.esgnavigator.ai/api/health`
+
+### Monitoring and Logs
+
+```bash
+# View ECS service status
+aws ecs describe-services \
+  --cluster ${PROJECT_NAME}-cluster \
+  --services ${PROJECT_NAME}-api-service ${PROJECT_NAME}-web-service \
+  --region ${AWS_REGION}
+
+# View CloudWatch logs
+aws logs tail /ecs/${PROJECT_NAME}-api --follow --region ${AWS_REGION}
+aws logs tail /ecs/${PROJECT_NAME}-web --follow --region ${AWS_REGION}
+
+# Check running tasks
+aws ecs list-tasks --cluster ${PROJECT_NAME}-cluster --region ${AWS_REGION}
+```
+
+### Scaling
+
+```bash
+# Scale API service
+aws ecs update-service \
+  --cluster ${PROJECT_NAME}-cluster \
+  --service ${PROJECT_NAME}-api-service \
+  --desired-count 4 \
+  --region ${AWS_REGION}
+
+# Enable auto-scaling (optional)
+aws application-autoscaling register-scalable-target \
+  --service-namespace ecs \
+  --scalable-dimension ecs:service:DesiredCount \
+  --resource-id service/${PROJECT_NAME}-cluster/${PROJECT_NAME}-api-service \
+  --min-capacity 2 \
+  --max-capacity 10 \
+  --region ${AWS_REGION}
+```
 
 ---
 
