@@ -1,5 +1,6 @@
-﻿import Anthropic from '@anthropic-ai/sdk';
+import Anthropic from '@anthropic-ai/sdk';
 import dotenv from 'dotenv';
+import { supplierService } from './supplier.service';
 
 dotenv.config();
 
@@ -13,26 +14,37 @@ export interface ClaudeMessage {
 }
 
 export class ClaudeService {
-  async chat(message: string, conversationHistory: ClaudeMessage[] = []): Promise<string> {
-    try {
-      const systemPrompt = `You are an ESG analyst for TIS-IntelliMat ESG Navigator.
+  private getSystemPrompt(): string {
+    const portfolio = supplierService.getPortfolio();
+    const suppliers = supplierService.getAllSuppliers();
+    const stats = supplierService.getComplianceStats();
+
+    let supplierDetails = '';
+    if (suppliers.length > 0) {
+      supplierDetails = suppliers.map((s, i) =>
+        `${i + 1}. ${s.name} - ${s.contractValue} - ESG Score: ${s.esgScore}/100 - ${s.riskLevel} RISK`
+      ).join('\n');
+    } else {
+      supplierDetails = 'No suppliers configured. Users can add suppliers through the platform.';
+    }
+
+    return `You are an ESG analyst for the ESG Navigator platform.
 
 CURRENT PORTFOLIO DATA:
-- Total Supply Chain Value: R331M
-- Overall ESG Compliance: 87.2%
-- Active Suppliers: 5 major companies
+- Total Supply Chain Value: ${portfolio.totalValue}
+- Overall ESG Compliance: ${portfolio.overallCompliance}
+- Active Suppliers: ${portfolio.activeSuppliers}
 
 SUPPLIER DETAILS:
-1. Eskom Holdings - R120M (36%) - ESG Score: 65/100 - HIGH RISK
-   Issues: 3 compliance violations, high carbon intensity
-2. Multotec Processing - R89M (27%) - ESG Score: 76/100 - MEDIUM RISK
-   Issues: 1 compliance issue
-3. Anglo American Platinum - R67M (20%) - ESG Score: 82/100 - LOW RISK
-   Issues: 0 violations - Best performer
-4. Sasol Chemical Industries - R55M (17%) - ESG Score: 71/100 - MEDIUM RISK
-   Issues: 2 compliance violations, high carbon intensity
+${supplierDetails}
 
-Provide professional, actionable ESG analysis with specific recommendations.`;
+Provide professional, actionable ESG analysis with specific recommendations.
+If no supplier data is available, guide users on how to get started with the platform.`;
+  }
+
+  async chat(message: string, conversationHistory: ClaudeMessage[] = []): Promise<string> {
+    try {
+      const systemPrompt = this.getSystemPrompt();
 
       const messages = [
         ...conversationHistory,
@@ -77,7 +89,7 @@ Provide detailed analysis in JSON format with:
 }`;
 
     const response = await this.chat(prompt);
-    
+
     try {
       const jsonMatch = response.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
@@ -90,18 +102,22 @@ Provide detailed analysis in JSON format with:
   }
 
   async generateReport(reportType: string = 'executive'): Promise<string> {
-    const prompt = `Generate a ${reportType} ESG report for TIS-IntelliMat portfolio.
+    const portfolio = supplierService.getPortfolio();
+    const stats = supplierService.getComplianceStats();
+    const highRisk = supplierService.getHighRiskSuppliers();
+
+    const prompt = `Generate a ${reportType} ESG report for the current portfolio.
 
 Portfolio Summary:
-- Total Value: R331M
-- Overall Compliance: 87.2%
-- Suppliers: 5
-- High Risk Exposure: R120M (36%)
+- Total Value: ${portfolio.totalValue}
+- Overall Compliance: ${portfolio.overallCompliance}
+- Total Suppliers: ${portfolio.activeSuppliers}
+- High Risk Suppliers: ${highRisk.length}
 
-Key Issues:
-- Eskom Holdings requires immediate attention
-- 6 total compliance violations across portfolio
-- 2 suppliers with high carbon intensity
+Compliance Stats:
+- Suppliers with Issues: ${stats.suppliersWithIssues}
+- Total Issues: ${stats.totalIssues}
+- Compliance Rate: ${stats.complianceRate}
 
 Create a professional report with:
 1. Executive Summary (2 paragraphs)

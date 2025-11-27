@@ -22,13 +22,12 @@ app.use(cookieParser());
 
 // Public routes
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'healthy', 
+  res.json({
+    status: 'healthy',
     timestamp: new Date().toISOString(),
     claude: process.env.ANTHROPIC_API_KEY ? 'configured' : 'missing',
     agents: 9,
-    auth: 'enabled',
-    suppliers: 5
+    auth: 'enabled'
   });
 });
 
@@ -41,28 +40,7 @@ app.use('/api/agents', authenticate, agentRoutes);
 app.use('/api/suppliers', supplierRoutes);
 
 app.listen(PORT, () => {
-  console.log(`✅ Backend running on http://localhost:${PORT}`);
-  console.log(`🤖 Claude AI: ${process.env.ANTHROPIC_API_KEY ? 'Configured' : 'Not configured'}`);
-  console.log(`🔧 9 AI Agents: Active`);
-  console.log(`🔐 Authentication: Enabled`);
-  console.log(`📊 TIS-IntelliMat Suppliers: 5`);
-  console.log(`💰 Portfolio Value: R331M`);
-  console.log(``);
-  console.log(`📊 Endpoints:`);
-  console.log(`   PUBLIC:`);
-  console.log(`   - GET  /health`);
-  console.log(`   - POST /api/auth/login`);
-  console.log(`   - POST /api/auth/register`);
-  console.log(``);
-  console.log(`   PROTECTED:`);
-  console.log(`   - GET  /api/suppliers (all suppliers)`);
-  console.log(`   - GET  /api/suppliers/portfolio (portfolio summary)`);
-  console.log(`   - GET  /api/suppliers/:id (specific supplier)`);
-  console.log(`   - GET  /api/suppliers/risk/:level (by risk level)`);
-  console.log(`   - GET  /api/suppliers/filter/high-risk`);
-  console.log(`   - GET  /api/suppliers/filter/top-performers`);
-  console.log(`   - POST /api/claude/chat`);
-  console.log(`   - GET  /api/agents`);
-  console.log(``);
-  console.log(`🔑 Demo: admin@tisholdings.co.za / admin123`);
+  console.log(`ESG Navigator API running on http://localhost:${PORT}`);
+  console.log(`Claude AI: ${process.env.ANTHROPIC_API_KEY ? 'Configured' : 'Not configured'}`);
+  console.log(`Authentication: Enabled`);
 });

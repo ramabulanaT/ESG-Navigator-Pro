@@ -54,7 +54,7 @@ export default function Home() {
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-            The world's first comprehensive AI-powered ESG-GRC automation platform. Trusted by Sibanye-Stillwater, Anglo American, and tier-1 enterprises. Powered by Anthropic Claude, AWS infrastructure, and IBM enterprise integration.
+            Comprehensive AI-powered ESG-GRC automation platform. Built for enterprise compliance, supplier management, and sustainability reporting. Powered by Anthropic Claude and modern cloud infrastructure.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -75,12 +75,12 @@ export default function Home() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20">
             <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
-              <div className="text-3xl font-bold text-cyan-400">R331M+</div>
-              <div className="text-sm text-gray-400 mt-2">Supply Chain Value</div>
+              <div className="text-3xl font-bold text-cyan-400">AI-Powered</div>
+              <div className="text-sm text-gray-400 mt-2">Supply Chain Analysis</div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
-              <div className="text-3xl font-bold text-cyan-400">87.2%</div>
-              <div className="text-sm text-gray-400 mt-2">Compliance Rate</div>
+              <div className="text-3xl font-bold text-cyan-400">Real-Time</div>
+              <div className="text-sm text-gray-400 mt-2">Compliance Monitoring</div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-lg p-6 backdrop-blur">
               <div className="text-3xl font-bold text-cyan-400">142+</div>
