@@ -95,7 +95,7 @@ export default function AssessmentsPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            companyName: 'Test Mining Corp',
+            companyName: 'Sample Company',
             documentText:
               'Our company implements ISO 14001 environmental management. We have comprehensive water management and waste reduction programs. Current compliance level is estimated at 85%.',
             assessmentType: 'quick-assessment',

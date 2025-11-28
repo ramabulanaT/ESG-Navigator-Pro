@@ -29,7 +29,7 @@ export const TIS_INTELLIMAT_PORTFOLIO: Portfolio = {
 export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
   {
     id: '1',
-    name: 'Eskom Holdings SOC Ltd',
+    name: 'Energy Supplier A',
     contractValue: 'R120M',
     contractValueNumeric: 120000000,
     esgScore: 65,
@@ -42,9 +42,9 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
     
     contact: {
       primaryContact: 'Supply Chain Manager',
-      email: 'procurement@eskom.co.za',
-      phone: '+27 11 800 8111',
-      address: 'Megawatt Park, Maxwell Drive, Sunninghill',
+      email: 'procurement@energysuppliera.co.za',
+      phone: '+27 11 800 0001',
+      address: 'Business Park, Sunninghill',
       country: 'South Africa'
     },
     
@@ -141,7 +141,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
   
   {
     id: '2',
-    name: 'Multotec Processing Equipment (Pty) Ltd',
+    name: 'Equipment Supplier B',
     contractValue: 'R89M',
     contractValueNumeric: 89000000,
     esgScore: 76,
@@ -154,9 +154,9 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
     
     contact: {
       primaryContact: 'ESG Compliance Officer',
-      email: 'sustainability@multotec.com',
-      phone: '+27 11 923 7300',
-      address: '1 Allandale Road, Midrand',
+      email: 'sustainability@equipmentsupplierb.com',
+      phone: '+27 11 800 0002',
+      address: 'Industrial Park, Midrand',
       country: 'South Africa'
     },
     
@@ -231,7 +231,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
   
   {
     id: '3',
-    name: 'Anglo American Platinum Limited',
+    name: 'Mining Supplier C',
     contractValue: 'R67M',
     contractValueNumeric: 67000000,
     esgScore: 82,
@@ -244,9 +244,9 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
     
     contact: {
       primaryContact: 'Head of Sustainability',
-      email: 'sustainability@angloamerican.com',
-      phone: '+27 11 638 9111',
-      address: '55 Marshall Street, Johannesburg',
+      email: 'sustainability@miningsupplierc.com',
+      phone: '+27 11 800 0003',
+      address: 'Mining House, Johannesburg',
       country: 'South Africa'
     },
     
@@ -313,7 +313,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
   
   {
     id: '4',
-    name: 'Sasol Chemical Industries Limited',
+    name: 'Chemical Supplier D',
     contractValue: 'R55M',
     contractValueNumeric: 55000000,
     esgScore: 71,
@@ -326,9 +326,9 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
     
     contact: {
       primaryContact: 'Sustainability Manager',
-      email: 'sustainability@sasol.com',
-      phone: '+27 10 344 5000',
-      address: '1 Sturdee Avenue, Rosebank',
+      email: 'sustainability@chemicalsupplierd.com',
+      phone: '+27 11 800 0004',
+      address: 'Chemical Park, Rosebank',
       country: 'South Africa'
     },
     
@@ -417,7 +417,7 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
   
   {
     id: '5',
-    name: 'Siemens South Africa (Pty) Ltd',
+    name: 'Technology Supplier E',
     contractValue: 'R45M',
     contractValueNumeric: 45000000,
     esgScore: 88,
@@ -430,9 +430,9 @@ export const TIS_INTELLIMAT_SUPPLIERS: Supplier[] = [
     
     contact: {
       primaryContact: 'Head of ESG',
-      email: 'esg.za@siemens.com',
-      phone: '+27 11 652 2000',
-      address: '108 Leeukop Road, Sunninghill',
+      email: 'esg@technologysuppliere.com',
+      phone: '+27 11 800 0005',
+      address: 'Technology Park, Sunninghill',
       country: 'South Africa'
     },
     

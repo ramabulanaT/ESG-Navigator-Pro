@@ -23,13 +23,13 @@ CURRENT PORTFOLIO DATA:
 - Active Suppliers: 5 major companies
 
 SUPPLIER DETAILS:
-1. Eskom Holdings - R120M (36%) - ESG Score: 65/100 - HIGH RISK
+1. Energy Supplier A - R120M (36%) - ESG Score: 65/100 - HIGH RISK
    Issues: 3 compliance violations, high carbon intensity
-2. Multotec Processing - R89M (27%) - ESG Score: 76/100 - MEDIUM RISK
+2. Equipment Supplier B - R89M (27%) - ESG Score: 76/100 - MEDIUM RISK
    Issues: 1 compliance issue
-3. Anglo American Platinum - R67M (20%) - ESG Score: 82/100 - LOW RISK
+3. Mining Supplier C - R67M (20%) - ESG Score: 82/100 - LOW RISK
    Issues: 0 violations - Best performer
-4. Sasol Chemical Industries - R55M (17%) - ESG Score: 71/100 - MEDIUM RISK
+4. Chemical Supplier D - R55M (17%) - ESG Score: 71/100 - MEDIUM RISK
    Issues: 2 compliance violations, high carbon intensity
 
 Provide professional, actionable ESG analysis with specific recommendations.`;
