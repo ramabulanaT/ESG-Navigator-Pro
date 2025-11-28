@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   description: 'Enterprise-grade ESG-GRC platform powered by Anthropic Claude, AWS, IBM, and DRATA.',
 }
 
+// Force dynamic rendering and prevent caching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default function RootLayout({
   children,
 }: {
