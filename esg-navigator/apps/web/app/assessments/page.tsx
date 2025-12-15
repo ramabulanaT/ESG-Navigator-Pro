@@ -1,8 +1,11 @@
+
 'use client'
+import { useState, useEffect } from 'react'
 import { useState } from 'react'
 import Link from 'next/link'
 import { CheckCircle, Clock, PlayCircle, FileCheck, Shield, Zap, Mountain, ArrowRight } from 'lucide-react'
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 interface Assessment {
   id: string
   title: string
@@ -65,7 +68,24 @@ const initialAssessments: Assessment[] = [
     IconComponent: Mountain,
   },
 ]
-
+useEffect(() => {
+  // Test connection to Railway backend
+  const testConnection = async () => {
+    try {
+      const response = await fetch(`${API_URL}/health`);
+      const data = await response.json();
+      console.log('✅ Backend connected:', data);
+      
+      // Try fetching ESG data
+      const esgResponse = await fetch(`${API_URL}/api/v1/esg`);
+      console.log('✅ ESG endpoint status:', esgResponse.status);
+    } catch (error) {
+      console.error('❌ Backend connection failed:', error);
+    }
+  };
+  
+  testConnection();
+}, []);
 export default function AssessmentsPage() {
   const [assessments, setAssessments] = useState<Assessment[]>(initialAssessments)
   const [selectedAssessment, setSelectedAssessment] = useState<string | null>(null)
